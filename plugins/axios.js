@@ -1,20 +1,20 @@
 import axios from "axios";
 
 export default defineNuxtPlugin((nuxtApp) => {
-    axios.defaults.withCredentials = true;
+  axios.defaults.withCredentials = true;
 
-    if (typeof window !== "undefined") {
-        axios.defaults.baseURL = window.location.hostname.includes("localhost")
-            ? "http://localhost:8000"
-            : "https://www.aiappsuniverse.com";
-    } else {
-        // Default to development in SSR context, or make a similar check based on server context
-        axios.defaults.baseURL = "http://localhost:8000";
-    }
+  if (typeof window !== "undefined") {
+    axios.defaults.baseURL = window.location.hostname.includes("localhost")
+      ? "http://localhost:8000"
+      : "https://main--thriving-tanuki-044060.netlify.app";
+  } else {
+    // Default to development in SSR context, or make a similar check based on server context
+    axios.defaults.baseURL = "http://localhost:8000";
+  }
 
-    return {
-        provide: {
-            axios: axios,
-        },
-    };
+  return {
+    provide: {
+      axios: axios,
+    },
+  };
 });
