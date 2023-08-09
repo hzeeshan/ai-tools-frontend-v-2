@@ -6,7 +6,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   if (typeof window !== "undefined") {
     axios.defaults.baseURL = window.location.hostname.includes("localhost")
       ? "http://localhost:8000"
-      : "https://main--thriving-tanuki-044060.netlify.app";
+      : "https://api.aiappsuniverse.com";
   } else {
     // Default to development in SSR context, or make a similar check based on server context
     axios.defaults.baseURL = "http://localhost:8000";
