@@ -34,7 +34,7 @@
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn flat to="/" nuxt> Home </v-btn>
-      <v-btn flat to="/categories" nuxt> Categories </v-btn>
+      <v-btn flat to="/platforms" nuxt> Platforms </v-btn>
       <v-btn flat to="/contact" nuxt> Contact Us </v-btn>
       <v-btn flat @click="logout" nuxt v-if="$userStore.id"> Logout </v-btn>
       <v-btn flat to="/auth/login" nuxt v-if="!$userStore.id"> Login </v-btn>

@@ -6,11 +6,7 @@
     <v-container>
       <div>
         <v-breadcrumbs
-          :items="[
-            'Home',
-            `${selectedApp?.category?.name}`,
-            `${selectedApp?.subcategory ? selectedApp.subcategory.name : ''}`,
-          ]"
+          :items="['Home', `${selectedApp?.category?.name}`]"
         ></v-breadcrumbs>
       </div>
 

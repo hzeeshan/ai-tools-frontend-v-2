@@ -2,11 +2,11 @@
   <v-main>
     <section>
       <v-container>
-        <h2 class="py-3">Manage Categories and subcategories</h2>
+        <h2 class="py-3">Manage Platforms and Categories</h2>
         <v-card class="my-9">
           <v-tabs v-model="tab" bg-color="primary">
-            <v-tab value="one"> Categories</v-tab>
-            <v-tab value="two">Subcatagerios</v-tab>
+            <v-tab value="one"> Platforms</v-tab>
+            <v-tab value="two">Catagerios</v-tab>
           </v-tabs>
 
           <v-card-text>
@@ -15,9 +15,9 @@
                 <div>
                   <v-list>
                     <v-list-item
-                      v-for="category in categories"
-                      :key="category.id"
-                      :title="category.name"
+                      v-for="platform in platforms"
+                      :key="platform.id"
+                      :title="platform.name"
                     >
                       <v-divider class="my-3"></v-divider>
                     </v-list-item>
@@ -28,33 +28,33 @@
               <v-window-item value="two">
                 <div class="d-flex justify-end mt-3 mb-5">
                   <v-btn color="primary" @click="dialog = true"
-                    >Create new Subcatagerios</v-btn
+                    >Create new Catagerios</v-btn
                   >
                 </div>
                 <v-list>
                   <v-list-item
-                    v-for="subcategory in subcategories"
-                    :key="subcategory.id"
+                    v-for="category in categories"
+                    :key="category.id"
                   >
                     <div class="d-flex justify-space-between align-center">
                       <div>
                         <v-list-item-title>
-                          Subcategory: {{ subcategory.name }}
+                          Category: {{ category.name }}
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                          Category: {{ subcategory.category.name }}
+                          Platform: {{ category.platform.name }}
                         </v-list-item-subtitle>
                       </div>
 
                       <v-list-item-action>
-                        <v-btn icon @click="editSubCategory(subcategory)">
+                        <v-btn icon @click="editCategory(category)">
                           <v-icon>mdi-pencil</v-icon>
                         </v-btn>
                         <v-btn
                           class="mx-3"
                           icon
                           color="red"
-                          @click="deleteSubCategory(subcategory)"
+                          @click="deleteCategory(category)"
                         >
                           <v-icon>mdi-close-circle</v-icon>
                         </v-btn>
@@ -82,14 +82,14 @@
           <v-card-text>
             <div>
               <h2 class="py-5">
-                {{ isEditMode ? "Edit Subcategory" : "Create New Subcategory" }}
+                {{ isEditMode ? "Edit Category" : "Create New Category" }}
               </h2>
             </div>
-            <v-form ref="subcategoryForm" @submit.prevent="submit">
+            <v-form ref="categoryForm" @submit.prevent="submit">
               <v-row>
                 <v-col cols="12">
                   <v-text-field
-                    v-model="formData.subcategoryName"
+                    v-model="formData.categoryName"
                     label="Name"
                     required
                     variant="outlined"
@@ -100,11 +100,11 @@
               <v-row>
                 <v-col cols="12">
                   <v-select
-                    :items="categories"
-                    label="Select Category*"
+                    :items="platforms"
+                    label="Select Platform*"
                     required
                     variant="outlined"
-                    v-model="formData.selectedCategoryId"
+                    v-model="formData.selectedPlatformId"
                     item-title="name"
                     item-value="id"
                     :rules="rules.required"
@@ -142,8 +142,8 @@ let currentPage = ref(1);
 let lastPage = ref(0);
 
 let formData = reactive({
-  subcategoryName: "",
-  selectedCategoryId: "",
+  categoryName: "",
+  selectedPlatformId: "",
 });
 
 let rules = reactive({
@@ -153,29 +153,28 @@ let rules = reactive({
 const tab = ref(null);
 let dialog = ref(false);
 let isEditMode = ref(false);
-let selectedSubcategoryId = ref(null);
+let selectedCategoryId = ref(null);
 
-const categories = ref([
+const platforms = ref([
   { id: 1, name: "Web Apps" },
   { id: 2, name: "Chrome Extensions" },
   { id: 3, name: "Mobile Apps" },
 ]);
 
-const subcategories = ref([]);
-const getSubCategories = async (page) => {
-  const { data } = await $axios.get(`/api/subcategories?page=${page}`);
-  //console.log(data);
-  const { data: subcatData, current_page, last_page } = data;
+const categories = ref([]);
+const getCategories = async (page) => {
+  const { data } = await $axios.get(`/api/categories?page=${page}`);
+  const { data: catData, current_page, last_page } = data;
 
   currentPage.value = current_page;
   lastPage.value = last_page;
-  subcategories.value = subcatData;
+  categories.value = catData;
 };
 
-const subcategoryForm = ref(null);
+const categoryForm = ref(null);
 
 const submit = async () => {
-  const { valid } = await subcategoryForm.value.validate();
+  const { valid } = await categoryForm.value.validate();
 
   if (valid) {
     try {
@@ -184,14 +183,11 @@ const submit = async () => {
       if (isEditMode.value) {
         let updatedFormData = {
           ...formData,
-          selectedSubcategoryId: selectedSubcategoryId.value,
+          selectedCategoryId: selectedCategoryId.value,
         };
-        res = await $axios.post(
-          "/api/public/subcategory/update",
-          updatedFormData
-        );
+        res = await $axios.post("/api/public/category/update", updatedFormData);
       } else {
-        res = await $axios.post("/api/public/subcategory", formData);
+        res = await $axios.post("/api/public/category", formData);
       }
 
       if (res.data.success === true) {
@@ -200,7 +196,7 @@ const submit = async () => {
         );
       }
       closeDialog();
-      getSubCategories();
+      getCategories();
     } catch (e) {
       console.log(e.response);
 
@@ -212,25 +208,23 @@ const submit = async () => {
   }
 };
 
-const editSubCategory = async (subcategory) => {
+const editCategory = async (category) => {
+  console.log(category.id);
   isEditMode.value = true;
   dialog.value = true;
-  formData.subcategoryName = subcategory.name;
-  formData.selectedCategoryId = subcategory.category.id;
-  selectedSubcategoryId.value = subcategory.id;
+  formData.categoryName = category.name;
+  formData.selectedCategoryId = category.id;
+  selectedCategoryId.value = category.id;
 };
 
-const deleteSubCategory = async (subcategory) => {
-  //console.log(subcategory.id);
+const deleteCategory = async (category) => {
   if (confirm("Are you sure ?")) {
     try {
-      const res = await $axios.delete(
-        `/api/public/subcategory/${subcategory.id}`
-      );
+      const res = await $axios.delete(`/api/public/category/${category.id}`);
       //console.log(res.data.success);
       if (res.data.success == true) {
         showSnackbarMessage("Deleted Successfully");
-        getSubCategories();
+        getCategories();
       }
     } catch (e) {
       console.log(e);
@@ -245,9 +239,9 @@ const showSnackbarMessage = (message) => {
 };
 
 const resetFormData = () => {
-  formData.subcategoryName = "";
+  formData.categoryName = "";
   formData.selectedCategoryId = "";
-  selectedSubcategoryId.value = null;
+  selectedCategoryId.value = null;
 };
 
 const closeDialog = () => {
@@ -256,10 +250,10 @@ const closeDialog = () => {
   resetFormData();
 };
 const changePage = (page) => {
-  getSubCategories(page);
+  getCategories(page);
 };
 
-getSubCategories();
+getCategories();
 </script>
 
 <style>

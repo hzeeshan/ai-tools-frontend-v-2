@@ -1,29 +1,29 @@
 <template>
   <main>
     <Head>
-      <Title>AI Apps Categories - Ai Apps Universe</Title>
+      <Title>AI Apps Platforms - Ai Apps Universe</Title>
     </Head>
-    <section id="categories" style="padding-top: 70px">
+    <section id="platforms" style="padding-top: 70px">
       <v-container>
         <v-card>
           <v-card-text>
-            <h2 class="text-h5 mb-2 text-center">Select Category</h2>
+            <h2 class="text-h5 mb-2 text-center">Select Platform</h2>
 
             <v-chip-group
               class="d-flex justify-center"
-              v-model="selectedCategories"
+              v-model="selectedPlatforms"
               column
               multiple
-              @update:modelValue="handleSelectedCategory"
+              @update:modelValue="handleSelectedPlatform"
             >
               <v-chip
-                v-for="category in categories"
-                :key="category.id"
+                v-for="platform in platforms"
+                :key="platform.id"
                 filter
                 variant="outlined"
-                :value="category.id"
+                :value="platform.id"
               >
-                {{ category.name }}
+                {{ platform.name }}
               </v-chip>
             </v-chip-group>
           </v-card-text>
@@ -47,23 +47,23 @@ const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 const { $axios } = useNuxtApp();
 
-let selectedCategories = ref([]);
-let categories = ref([]);
+let selectedPlatforms = ref([]);
+let platforms = ref([]);
 let apps = ref([]);
 let currentPage = ref(1);
 let lastPage = ref(0);
 
 /* methods */
-const getCategories = async () => {
-  const { data } = await $axios.get(`${baseUrl}categories`);
-  categories.value = data;
+const getPlatforms = async () => {
+  const { data } = await $axios.get(`${baseUrl}platforms`);
+  platforms.value = data;
 };
 
-await getCategories();
+await getPlatforms();
 
-async function filterAppsByCategory(id, page = 1) {
+async function filterAppsByPlatform(id, page = 1) {
   const { data } = await $axios.post(
-    `${baseUrl}public/filter-apps/category?page=${page}`,
+    `${baseUrl}public/filter-apps/platform?page=${page}`,
     { id }
   );
 
@@ -74,13 +74,13 @@ async function filterAppsByCategory(id, page = 1) {
   lastPage.value = last_page;
 }
 
-const handleSelectedCategory = (id) => {
-  filterAppsByCategory(id, currentPage.value);
+const handleSelectedPlatform = (id) => {
+  filterAppsByPlatform(id, currentPage.value);
 };
 
 const changePage = (page) => {
-  if (selectedCategories.value.length > 0) {
-    filterAppsByCategory(selectedCategories.value, page);
+  if (selectedPlatforms.value.length > 0) {
+    filterAppsByPlatform(selectedPlatforms.value, page);
   }
 };
 </script>
