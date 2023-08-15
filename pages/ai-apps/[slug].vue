@@ -12,20 +12,21 @@
 
       <section v-if="selectedApp">
         <v-row class="pt-5">
-          <v-col cols="6">
+          <v-col cols="12" md="6" lg="6" sm="12">
             <div v-if="selectedApp.main_image">
-              <v-img
-                v-if="selectedApp.main_image"
+              <nuxt-img
                 :src="
                   selectedApp.main_image.path.startsWith('http')
                     ? selectedApp.main_image.path
                     : `${appBaseURL}/${selectedApp.main_image.path}`
                 "
-                cover
-              ></v-img>
+                sizes="xs:100vw sm:100vw md:50vw lg:50vw xl:25vw"
+                placeholder="blur"
+                style="max-width: 100%; height: auto"
+              />
             </div>
           </v-col>
-          <v-col cols="6">
+          <v-col cols="12" md="6" lg="6" sm="12">
             <h1>{{ selectedApp.name }}</h1>
             <p class="py-5">
               {{ selectedApp.short_description }}

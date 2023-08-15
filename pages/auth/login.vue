@@ -45,6 +45,7 @@
         </v-col>
       </v-row>
     </v-container>
+    <Snackbar v-model="showSnackbar" :text="snackbarText" />
   </v-main>
 </template>
   
@@ -53,22 +54,34 @@ const { $userStore } = useNuxtApp();
 let email = ref("");
 let password = ref("");
 
+let showSnackbar = ref(false);
+let snackbarText = ref("");
+
 let emailRules = [
   (v) => !!v || "E-mail is required",
   (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
 let passwordRules = [(v) => !!v || "Password is required"];
 
-let loginForm = ref(null);
+const showSnackbarMessage = (message) => {
+  snackbarText.value = message;
+  showSnackbar.value = true;
+};
 
+let loginForm = ref(null);
 const submit = async () => {
   const { valid } = await loginForm.value.validate();
-  if (valid) {
-    await $userStore.getToken();
-    await $userStore.login(email.value, password.value);
-    navigateTo({
-      path: `/admin/dashboard`,
-    });
+  try {
+    if (valid) {
+      await $userStore.getToken();
+      await $userStore.login(email.value, password.value);
+      navigateTo({
+        path: `/admin/dashboard`,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    showSnackbarMessage(e.response.data.message);
   }
 };
 </script>

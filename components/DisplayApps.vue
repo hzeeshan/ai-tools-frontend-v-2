@@ -3,18 +3,21 @@
     <v-container>
       <v-row>
         <v-col v-for="app in apps" cols="12" sm="4" md="4" :key="app.id">
-          <v-card class="mx-auto app-card" max-width="344">
-            <v-img
+          <v-card class="mx-auto app-card" max-width="350">
+            <nuxt-img
               v-if="app.main_image"
               :src="
                 app.main_image.path.startsWith('http')
                   ? app.main_image.path
                   : `${appBaseURL}/${app.main_image.path}`
               "
-              height="200px"
-              cover
-            ></v-img>
+              height="200"
+              sizes="xs:320px sm:420px md:768px lg:1024px"
+              placeholder="true"
+              fit="cover"
+            ></nuxt-img>
 
+            <!-- Default Image if no main image exists -->
             <v-img v-else height="200px" cover></v-img>
 
             <v-card-title> {{ app.name }} </v-card-title>
@@ -57,7 +60,6 @@
 const { $userStore } = useNuxtApp();
 const config = useRuntimeConfig();
 const appBaseURL = config.public.appBaseUrl;
-console.log(appBaseURL);
 const props = defineProps({
   apps: {
     type: Array,

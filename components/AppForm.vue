@@ -105,13 +105,14 @@
         </v-col>
         <v-col cols="12" sm="12">
           <!-- Display the existing main image separately -->
-          <v-img
-            :width="150"
-            aspect-ratio="16/9"
-            cover
+          <nuxt-img
             v-if="formData.existingMainImage"
             :src="`${appBaseURL}/${formData.existingMainImage.path}`"
-          ></v-img>
+            width="150"
+            height="84"
+            sizes="xs:150px sm:300px md:450px lg:600px"
+            fit="cover"
+          ></nuxt-img>
         </v-col>
         <v-col cols="12" sm="12">
           <v-file-input
