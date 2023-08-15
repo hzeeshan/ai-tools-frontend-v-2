@@ -1,5 +1,8 @@
 <template>
   <v-main>
+    <Head>
+      <Title>Cerate New App</Title>
+    </Head>
     <v-container>
       <v-card>
         <v-card-title>

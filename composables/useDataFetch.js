@@ -1,30 +1,30 @@
 export default function useDataFetch() {
-    const { $axios } = useNuxtApp();
-    const categories = ref([]);
-    const subcategories = ref([]);
-    const licenceTypes = ref([]);
+  const { $axios } = useNuxtApp();
+  const platforms = ref([]);
+  const categories = ref([]);
+  const licenceTypes = ref([]);
 
-    const getCategories = async () => {
-        const { data } = await $axios.get(`/api/categories`);
-        categories.value = data;
-    };
+  const getPlatforms = async () => {
+    const { data } = await $axios.get(`/api/platforms`);
+    platforms.value = data;
+  };
 
-    const getRelatedSubCategories = async (categoryId) => {
-        const { data } = await $axios.get(`/api/subcategories/${categoryId}`);
-        subcategories.value = data;
-    };
+  const getRelatedCategories = async (platformId) => {
+    const { data } = await $axios.get(`/api/categories/${platformId}`);
+    categories.value = data;
+  };
 
-    const getLicenceTypes = async () => {
-        const { data } = await $axios.get(`/api/license-types`);
-        licenceTypes.value = data;
-    };
+  const getLicenceTypes = async () => {
+    const { data } = await $axios.get(`/api/license-types`);
+    licenceTypes.value = data;
+  };
 
-    return {
-        categories,
-        subcategories,
-        licenceTypes,
-        getCategories,
-        getRelatedSubCategories,
-        getLicenceTypes,
-    };
+  return {
+    platforms,
+    categories,
+    licenceTypes,
+    getPlatforms,
+    getRelatedCategories,
+    getLicenceTypes,
+  };
 }

@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <Head>
+      <Title>Admin - Apps</Title>
+    </Head>
     <section class="d-flex justify-space-between mx-16 my-9">
       <div>
         <h1>All Apps</h1>

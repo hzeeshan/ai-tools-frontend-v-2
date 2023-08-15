@@ -40,8 +40,23 @@
 
         <v-col cols="12" sm="12">
           <v-select
+            :items="platforms"
+            label="Select Platforms*"
+            required
+            variant="outlined"
+            v-model="formData.platform_id"
+            :rules="rules.platform"
+            item-title="name"
+            item-value="id"
+            :error-messages="serverErrors.platform_id"
+            @input="resetServerError('platform_id')"
+            @update:modelValue="getRelatedCategories"
+          ></v-select>
+        </v-col>
+        <v-col cols="12" sm="12">
+          <v-select
             :items="categories"
-            label="Select Category*"
+            label="Select Categories*"
             required
             variant="outlined"
             v-model="formData.category_id"
@@ -50,21 +65,6 @@
             item-value="id"
             :error-messages="serverErrors.category_id"
             @input="resetServerError('category_id')"
-            @update:modelValue="getRelatedSubCategories"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="12">
-          <v-select
-            :items="subcategories"
-            label="Select Subcategories*"
-            required
-            variant="outlined"
-            v-model="formData.subcategory_id"
-            :rules="rules.subcategory"
-            item-title="name"
-            item-value="id"
-            :error-messages="serverErrors.subcategory_id"
-            @input="resetServerError('subcategory_id')"
           ></v-select>
         </v-col>
         <v-col cols="12" sm="12">
@@ -131,12 +131,7 @@
           class="d-flex child-flex"
           cols="4"
         >
-          <v-img
-            :src="`${appBaseURL}/${image.path}`"
-            aspect-ratio="1"
-            cover
-            class="bg-grey-lighten-2"
-          >
+          <v-img :src="`${appBaseURL}/${image.path}`" aspect-ratio="1" cover>
             <v-icon class="delete-icon" @click="showConfirmDialog(image.id)">
               mdi-close-circle
             </v-icon>
@@ -224,12 +219,12 @@ let snackbarText = ref("");
 let serverErrors = ref({});
 
 const {
+  platforms,
   categories,
-  subcategories,
   licenceTypes,
-  getCategories,
+  getPlatforms,
   getLicenceTypes,
-  getRelatedSubCategories,
+  getRelatedCategories,
 } = useDataFetch();
 
 let formData = reactive({
@@ -237,8 +232,8 @@ let formData = reactive({
   slug: "",
   short_description: "",
   description: "",
+  platform_id: "",
   category_id: "",
-  subcategory_id: "",
   website_link: "",
   license_type_id: "",
   mainImage: null,
@@ -258,8 +253,8 @@ let rules = reactive({
     (v) => (v && v.length <= 50) || "Slug must be less than 50 characters",
   ],
   short_description: [(v) => !!v || "Short Description is required"],
+  platform: [(v) => !!v || "Platform is required"],
   category: [(v) => !!v || "Category is required"],
-  subcategory: [(v) => !!v || "Subcategory is required"],
   website: [(v) => !!v || "Website is required"],
   licenceType: [(v) => !!v || "Licence Type is required"],
   mainImage: [
@@ -374,7 +369,8 @@ async function onSubmit() {
 
 const showDialog = ref(false);
 const currentImageId = ref(null);
-const showConfirmDialog = async (imageId) => {
+const showConfirmDialog = (imageId) => {
+  console.log(1234567890);
   console.log(imageId);
   currentImageId.value = imageId;
   showDialog.value = true;
@@ -418,8 +414,8 @@ const getSingleAppDetails = async () => {
   formData.slug = res.data.slug;
   formData.short_description = res.data.short_description;
   formData.description = res.data.description;
+  formData.platform_id = res.data.platform_id;
   formData.category_id = res.data.category_id;
-  formData.subcategory_id = res.data.subcategory_id;
   formData.website_link = res.data.website_link;
   formData.license_type_id = res.data.license_type.id;
   formData.plans = res.data.price_plans;
@@ -428,19 +424,19 @@ const getSingleAppDetails = async () => {
   formData.existingOtherImages = res.data.images;
 };
 
-/* this variable is for to prevent running getRelatedSubCategories function twice */
+/* this variable is for to prevent running getRelatedCategories function twice */
 let isFirstLoad = ref(true);
 watchEffect(async () => {
-  if (props.isEditMode && formData.category_id && isFirstLoad.value) {
-    await getRelatedSubCategories(formData.category_id);
+  if (props.isEditMode && formData.platform_id && isFirstLoad.value) {
+    await getRelatedCategories(formData.platform_id);
     isFirstLoad.value = false;
   }
-  if (props.isEditMode && !formData.category_id) {
+  if (props.isEditMode && !formData.platform_id) {
     getSingleAppDetails();
   }
 });
 
-getCategories();
+getPlatforms();
 getLicenceTypes();
 </script>
 

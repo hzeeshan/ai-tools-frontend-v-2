@@ -47,7 +47,7 @@ const props = defineProps({
   options: Object,
 });
 
-const zIndex = 200;
+const zIndex = 1500;
 
 const emits = defineEmits(["update:modelValue", "confirm"]);
 

@@ -1,5 +1,8 @@
 <template>
   <v-main>
+    <Head>
+      <Title>Admin - Categories</Title>
+    </Head>
     <section>
       <v-container>
         <h2 class="py-3">Manage Platforms and Categories</h2>
