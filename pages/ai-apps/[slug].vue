@@ -144,14 +144,16 @@ const tags = ref([]);
 async function getAppDetails() {
   try {
     const res = await $axios.get(`/api/app/${appSlug}`);
-
     if (!res.data) {
-      throw new Error("No data received");
+      throw createError({
+        statusCode: 404,
+        statusMessage: "App not found",
+        fatal: true,
+      });
     }
     //console.log(res.data);
     const { id, category } = res.data;
     selectedApp.value = res.data;
-    console.log(selectedApp.value.main_image.path);
     selectedAppId.value = id;
 
     getAppRelatedTags(id);
@@ -162,7 +164,7 @@ async function getAppDetails() {
     }
   } catch (error) {
     console.error("Error fetching app details:", error);
-    // Handle the error appropriately in your UI
+    showError({ message: "App not found", statusCode: 404 });
   }
 }
 
