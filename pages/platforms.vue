@@ -43,9 +43,9 @@
 </template>
 
 <script setup>
+const { $axios } = useNuxtApp();
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
-const { $axios } = useNuxtApp();
 
 let selectedPlatforms = ref([]);
 let platforms = ref([]);

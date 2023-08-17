@@ -8,6 +8,9 @@
         <v-col cols="12" md="6">
           <v-card>
             <v-card-text>
+              <div>
+                <h2 class="py-5">Contact Us</h2>
+              </div>
               <v-form ref="form" v-model="valid">
                 <v-row>
                   <v-col cols="12" sm="6">

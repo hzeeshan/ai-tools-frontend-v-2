@@ -3,6 +3,7 @@ export default function useDataFetch() {
   const platforms = ref([]);
   const categories = ref([]);
   const licenceTypes = ref([]);
+  const listOfCategories = ref([]);
 
   const getPlatforms = async () => {
     const { data } = await $axios.get(`/api/platforms`);
@@ -14,6 +15,11 @@ export default function useDataFetch() {
     categories.value = data;
   };
 
+  const getListOfCategories = async () => {
+    const { data } = await $axios.get(`/api/all-categories`);
+    listOfCategories.value = data;
+  };
+
   const getLicenceTypes = async () => {
     const { data } = await $axios.get(`/api/license-types`);
     licenceTypes.value = data;
@@ -23,8 +29,10 @@ export default function useDataFetch() {
     platforms,
     categories,
     licenceTypes,
+    listOfCategories,
     getPlatforms,
     getRelatedCategories,
     getLicenceTypes,
+    getListOfCategories,
   };
 }
