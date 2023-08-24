@@ -1,8 +1,5 @@
 <template>
   <main>
-    <Head>
-      <Title>AI Apps Categories - Ai Apps Universe</Title>
-    </Head>
     <section id="categories" style="padding-top: 70px">
       <v-container>
         <v-card class="pa-9">
@@ -43,6 +40,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: "AI Tool Categories - Explore AI Solutions by Specific Needs",
+  description:
+    "Navigate through diverse AI tool categories, from productivity to entertainment. Find the perfect AI solution tailored to your specific needs and interests.",
+});
 const { $axios } = useNuxtApp();
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
@@ -52,8 +54,6 @@ let selectedCategories = ref([]);
 let apps = ref([]);
 let currentPage = ref(1);
 let lastPage = ref(0);
-
-await getListOfCategories();
 
 const handleSelectedCategory = (categoryIds) => {
   filterAppsByCategory(categoryIds, currentPage.value);
@@ -80,6 +80,14 @@ const changePage = (page) => {
     filterAppsByCategory(selectedCategories.value, page);
   }
 };
+
+onMounted(async () => {
+  try {
+    await getListOfCategories();
+  } catch (e) {
+    console.log(e);
+  }
+});
 </script>
 
 <style>

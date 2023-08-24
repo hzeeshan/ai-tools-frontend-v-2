@@ -62,12 +62,7 @@
                   <v-btn color="error" @click="reset" class="ml-5">
                     Reset
                   </v-btn>
-                  <v-btn
-                    :disabled="!valid"
-                    color="success"
-                    @click="submit"
-                    class="ml-3 mb-3"
-                  >
+                  <v-btn color="primary" @click="submit" class="ml-3 mb-3">
                     Send
                   </v-btn>
                 </v-row>

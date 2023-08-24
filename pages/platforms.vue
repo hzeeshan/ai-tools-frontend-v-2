@@ -1,8 +1,5 @@
 <template>
   <main>
-    <Head>
-      <Title>AI Apps Platforms - Ai Apps Universe</Title>
-    </Head>
     <section id="platforms" style="padding-top: 70px">
       <v-container>
         <v-card>
@@ -43,6 +40,11 @@
 </template>
 
 <script setup>
+useSeoMeta({
+  title: "AI Platforms Overview - Web Apps, Mobile Solutions & Extensions",
+  description:
+    "Discover AI tools based on your preferred platform. Whether it's web apps, mobile solutions, or browser extensions, find the best AI innovations optimized for your device.",
+});
 const { $axios } = useNuxtApp();
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;

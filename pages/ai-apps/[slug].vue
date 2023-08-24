@@ -1,8 +1,8 @@
 <template>
   <main>
-    <Head>
+    <!-- <Head>
       <Title>{{ selectedApp.name }}</Title>
-    </Head>
+    </Head> -->
     <v-container>
       <div>
         <v-breadcrumbs
@@ -182,6 +182,11 @@ async function getAppRelatedTags(id) {
 }
 onMounted(() => {
   getAppDetails();
+});
+
+useSeoMeta({
+  title: selectedApp.name,
+  description: selectedApp.description,
 });
 </script>
 

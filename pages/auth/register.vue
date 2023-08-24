@@ -62,7 +62,7 @@
                 </v-row>
 
                 <v-row class="d-flex justify-start">
-                  <v-btn color="success" @click="submit" class="ml-3 mb-3">
+                  <v-btn color="primary" @click="submit" class="ml-3 mb-3">
                     Submit
                   </v-btn>
                   <!--  <v-btn color="error" @click="reset" class="ml-5">

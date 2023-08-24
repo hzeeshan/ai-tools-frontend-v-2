@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-app>
+      <SeoKit />
       <NuxtLayout class="bg-ghostWhite">
         <NuxtPage />
       </NuxtLayout>
@@ -16,6 +17,7 @@ onMounted(async () => {
     await $generalStore.hasSessionExpired();
   } catch (e) {
     console.log(e);
+  } finally {
   }
 });
 </script>

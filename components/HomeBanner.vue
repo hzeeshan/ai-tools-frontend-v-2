@@ -1,30 +1,21 @@
 <template>
   <section>
-    <v-parallax
-      height="50vh"
-      src="https://cdn.vuetifyjs.com/images/backgrounds/vbanner.jpg"
-    >
+    <v-parallax height="50vh" class="parallax">
       <div
         class="d-flex flex-column fill-height justify-center align-center text-white"
       >
-        <h1 class="display-2">TOP APPs POWERED BY AI</h1>
-        <p class="subtitle-1">THE BEST AI POWERED WEB APPS</p>
-        <v-btn color="primary" class="mt-3" size="large">Explore</v-btn>
+        <h1 class="text-h4 font-weight-bold py-3 text-center">
+          Discover the Universe of AI Tools
+        </h1>
+        <p class="subtitle-1 text-center">
+          Browse a curated collection of the most innovative AI tools, apps, and
+          extensions.
+        </p>
+        <v-btn to="/platforms" class="mt-3 main-action-button" size="large"
+          >Dive In</v-btn
+        >
       </div>
     </v-parallax>
-    <!-- <v-container fluid class="banner">
-      <v-row class="fill-height" align="center" justify="center">
-        <v-col cols="12" sm="8" md="6">
-          <div class="text-center">
-            <h1 class="display-2">TOP APPs POWERED BY AI</h1>
-            <p class="subtitle-1">THE BEST AI POWERED WEB APPS</p>
-            <v-btn color="primary" class="mt-3" size="large" @click="toggleTheme"
-              >Explore</v-btn
-            >
-          </div>
-        </v-col>
-      </v-row>
-    </v-container> -->
   </section>
 </template>
 
@@ -32,8 +23,16 @@
 </script>
 
 <style scoped>
-.banner {
-  height: 50vh;
-  background-color: var(--v-theme-background);
+.parallax {
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(61, 56, 164, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+.main-action-button {
+  background-color: #273139;
+  color: white;
 }
 </style>

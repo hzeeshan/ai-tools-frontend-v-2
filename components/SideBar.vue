@@ -84,6 +84,6 @@ const logout = async () => {
   padding-top: 10px;
 }
 .v-list-item--active {
-  background-color: red;
+  background-color: #000000;
 }
 </style>
