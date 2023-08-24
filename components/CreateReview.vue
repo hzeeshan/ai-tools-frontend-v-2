@@ -174,7 +174,7 @@ async function postData() {
     email: form.email,
   };
 
-  const { data, error } = await useFetch(`${baseUrl}rating/store`, {
+  const { data, error } = await useFetch(`${baseUrl}/rating/store`, {
     method: "post",
     body: formData,
   });
@@ -194,7 +194,7 @@ function submitAnotherReview() {
 }
 async function getAppRating() {
   const id = props.appId;
-  const { data } = await useFetch(`${baseUrl}app/rating/${id}`);
+  const { data } = await useFetch(`${baseUrl}/app/rating/${id}`);
 
   appRating.value = data.value;
 }

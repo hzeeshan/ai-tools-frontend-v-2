@@ -88,7 +88,7 @@ const getApps = async (page, licenseTypes = []) => {
       .join(",");
 
     const { data } = await $axios.get(
-      `${baseUrl}apps?page=${page}&license_type=${licenseTypeQueryString}`
+      `${baseUrl}/apps?page=${page}&license_type=${licenseTypeQueryString}`
     );
 
     const { data: appData, current_page, last_page } = data;

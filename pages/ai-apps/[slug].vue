@@ -22,7 +22,7 @@
                 "
                 sizes="xs:100vw sm:100vw md:50vw lg:50vw xl:25vw"
                 placeholder="blur"
-                style="max-width: 100%; height: auto"
+                style="width: 90%; height: auto"
               />
             </div>
           </v-col>
@@ -98,19 +98,31 @@
               </v-window-item>
 
               <v-window-item value="tags">
-                <section id="categories">
+                <section id="tags">
                   <v-card>
                     <v-card-text>
-                      <v-chip-group column multiple>
+                      <v-chip-group
+                        column
+                        multiple
+                        v-model="selectedTags"
+                        @update:modelValue="handleSelectedTags"
+                      >
                         <v-chip
                           v-for="tag in tags"
                           :key="tag.id"
                           filter
                           variant="outlined"
+                          :value="tag.id"
                         >
                           {{ tag.name }}
                         </v-chip>
                       </v-chip-group>
+                      <div>
+                        <DisplayApps
+                          :apps="tagsRelatedApps"
+                          v-if="tagsRelatedApps.length > 0"
+                        />
+                      </div>
                     </v-card-text>
                   </v-card>
                 </section>
@@ -140,6 +152,8 @@ const baseUrl = config.public.apiBaseUrl;
 const appBaseURL = config.public.appBaseUrl;
 const relatedApps = ref([]);
 const tags = ref([]);
+const selectedTags = ref([]);
+const tagsRelatedApps = ref([]);
 
 async function getAppDetails() {
   try {
@@ -170,16 +184,28 @@ async function getAppDetails() {
 
 async function getRelatedApps(id) {
   if (id) {
-    const { data } = await useFetch(`${baseUrl}apps/category/${id}`);
+    const { data } = await useFetch(`${baseUrl}/apps/category/${id}`);
     relatedApps.value = data.value;
   }
 }
 async function getAppRelatedTags(id) {
   if (id) {
-    const { data } = await useFetch(`${baseUrl}app/tags/${id}`);
+    const { data } = await useFetch(`${baseUrl}/app/tags/${id}`);
     tags.value = data.value;
   }
 }
+const handleSelectedTags = async (tagIds) => {
+  try {
+    const { data } = await $axios.get(`${baseUrl}/apps/filter-by-tags`, {
+      params: {
+        tagIds,
+      },
+    });
+    tagsRelatedApps.value = data;
+  } catch (e) {
+    console.log(e);
+  }
+};
 onMounted(() => {
   getAppDetails();
 });

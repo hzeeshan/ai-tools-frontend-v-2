@@ -62,7 +62,7 @@ const handleSelectedCategory = (categoryIds) => {
 async function filterAppsByCategory(categoryIds, page = 1) {
   try {
     const { data } = await $axios.get(
-      `${baseUrl}apps/filter?category_ids=${categoryIds}&page=${page}`
+      `${baseUrl}/apps/filter?category_ids=${categoryIds}&page=${page}`
     );
 
     const { data: items, current_page, last_page } = data;

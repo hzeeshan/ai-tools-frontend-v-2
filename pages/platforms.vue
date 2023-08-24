@@ -57,7 +57,7 @@ let lastPage = ref(0);
 
 /* methods */
 const getPlatforms = async () => {
-  const { data } = await $axios.get(`${baseUrl}platforms`);
+  const { data } = await $axios.get(`${baseUrl}/platforms`);
   platforms.value = data;
 };
 
@@ -65,7 +65,7 @@ await getPlatforms();
 
 async function filterAppsByPlatform(id, page = 1) {
   const { data } = await $axios.post(
-    `${baseUrl}public/filter-apps/platform?page=${page}`,
+    `${baseUrl}/public/filter-apps/platform?page=${page}`,
     { id }
   );
 
