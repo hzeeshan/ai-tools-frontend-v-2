@@ -68,6 +68,21 @@
           ></v-select>
         </v-col>
         <v-col cols="12" sm="12">
+          <v-combobox
+            clearable
+            chips
+            multiple
+            variant="outlined"
+            label="Select Tags"
+            v-model="formData.tags"
+            :items="tags"
+            item-title="name"
+            item-value="id"
+            :create-item="true"
+            return-object
+          ></v-combobox>
+        </v-col>
+        <v-col cols="12" sm="12">
           <v-text-field
             label="Website"
             required
@@ -222,10 +237,12 @@ let serverErrors = ref({});
 const {
   platforms,
   categories,
+  tags,
   licenceTypes,
   getPlatforms,
   getLicenceTypes,
   getRelatedCategories,
+  getListOfTags,
 } = useDataFetch();
 
 let formData = reactive({
@@ -235,6 +252,7 @@ let formData = reactive({
   description: "",
   platform_id: "",
   category_id: "",
+  tags: [],
   website_link: "",
   license_type_id: "",
   mainImage: null,
@@ -331,11 +349,24 @@ const postData = async () => {
 
   // Append non-file data to the form
   Object.keys(formData).forEach((key) => {
-    if (key !== "mainImage" && key !== "otherImages") {
+    if (key !== "mainImage" && key !== "otherImages" && key !== "tags") {
       form.append(key, formData[key]);
     }
   });
 
+  const existingTagIds = [];
+  const newTags = [];
+
+  formData.tags.forEach((tag) => {
+    if (typeof tag === "object") {
+      existingTagIds.push(tag.id);
+    } else {
+      newTags.push(tag);
+    }
+  });
+
+  form.append("existingTags", JSON.stringify(existingTagIds));
+  form.append("newTags", JSON.stringify(newTags));
   form.append("price_plans", JSON.stringify(filteredPlans));
   form.append("originalMainImage", originalMainImageId);
   form.append("originalOtherImages", JSON.stringify(originalOtherImagesIds));
@@ -371,8 +402,6 @@ async function onSubmit() {
 const showDialog = ref(false);
 const currentImageId = ref(null);
 const showConfirmDialog = (imageId) => {
-  console.log(1234567890);
-  console.log(imageId);
   currentImageId.value = imageId;
   showDialog.value = true;
 };
@@ -410,7 +439,13 @@ const deleteImage = async (imageId) => {
 const getSingleAppDetails = async () => {
   const appId = route.params.id;
   const res = await $axios.get(`/api/apps/${appId}`);
-  //console.log(res.data);
+
+  if (res.data.tags.length > 0) {
+    formData.tags = res.data.tags.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+    }));
+  }
   formData.name = res.data.name;
   formData.slug = res.data.slug;
   formData.short_description = res.data.short_description;
@@ -437,8 +472,12 @@ watchEffect(async () => {
   }
 });
 
-getPlatforms();
-getLicenceTypes();
+async function fetchData() {
+  await getPlatforms();
+  await getLicenceTypes();
+  await getListOfTags();
+}
+fetchData();
 </script>
 
 <style scoped>
