@@ -1,15 +1,21 @@
 <template>
   <div>
-    <v-app-bar color="primary" dense dark>
+    <v-app-bar color="primary" dense dark height="80">
       <v-btn icon @click="drawer = !drawer" v-if="mobile">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
 
-      <v-app-bar-title
-        ><nuxt-link to="/" class="custom-link"
-          >AI Tools</nuxt-link
-        ></v-app-bar-title
-      >
+      <v-app-bar-title>
+        <NuxtLink to="/">
+          <v-img
+            max-height="75"
+            width="300"
+            src="/images/logo.png"
+            class="align-center"
+            to="/"
+          ></v-img>
+        </NuxtLink>
+      </v-app-bar-title>
 
       <!-- <v-spacer v-if="mobile"></v-spacer> -->
       <v-autocomplete
@@ -160,7 +166,7 @@ watch(search, (newSearch) => {
 
 const autocompleteStyle = computed(() => {
   if (mobile.value) {
-    return "width: 40%; margin-right: 10px";
+    return "width: 40%; margin-right: 10px;margin-left: 10px";
   }
   return "";
 });
