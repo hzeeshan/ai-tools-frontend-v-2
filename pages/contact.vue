@@ -11,11 +11,11 @@
               <div>
                 <h2 class="py-5">Contact Us</h2>
               </div>
-              <v-form ref="form" v-model="valid">
+              <v-form ref="formRef" v-model="valid">
                 <v-row>
                   <v-col cols="12" sm="6">
                     <v-text-field
-                      v-model="name"
+                      v-model="formData.name"
                       :rules="nameRules"
                       label="Name"
                       required
@@ -25,7 +25,7 @@
 
                   <v-col cols="12" sm="6">
                     <v-text-field
-                      v-model="email"
+                      v-model="formData.email"
                       :rules="emailRules"
                       label="E-mail"
                       required
@@ -37,7 +37,7 @@
                 <v-row>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="subject"
+                      v-model="formData.subject"
                       :rules="subjectRules"
                       label="Subject"
                       required
@@ -49,7 +49,7 @@
                 <v-row>
                   <v-col cols="12">
                     <v-textarea
-                      v-model="message"
+                      v-model="formData.message"
                       :rules="messageRules"
                       label="Message"
                       required
@@ -72,39 +72,76 @@
         </v-col>
       </v-row>
     </v-container>
+    <section>
+      <Snackbar v-model="showSnackbar" :text="snackbarText" />
+    </section>
+    <section>
+      <v-overlay :model-value="overlay" class="align-center justify-center">
+        <v-progress-circular
+          color="primary"
+          indeterminate
+          size="64"
+        ></v-progress-circular>
+      </v-overlay>
+    </section>
   </v-main>
 </template>
   
-  <script>
-export default {
-  data: () => ({
-    valid: true,
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-    nameRules: [
-      (v) => !!v || "Name is required",
-      (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
-    ],
-    emailRules: [
-      (v) => !!v || "E-mail is required",
-      (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-    ],
-    subjectRules: [(v) => !!v || "Subject is required"],
-    messageRules: [(v) => !!v || "Message is required"],
-  }),
-  methods: {
-    submit() {
-      if (this.$refs.form.validate()) {
-        // Perform some action here
-        alert("Submitted Successfully");
+
+<script setup>
+const { $axios } = useNuxtApp();
+const valid = ref(true);
+let formData = reactive({
+  name: ref(""),
+  email: ref(""),
+  subject: ref(""),
+  message: ref(""),
+});
+
+let showSnackbar = ref(false);
+let snackbarText = ref("");
+let overlay = ref(false);
+
+const nameRules = [
+  (v) => !!v || "Name is required",
+  (v) => (v && v.length <= 10) || "Name must be less than 10 characters",
+];
+
+const emailRules = [
+  (v) => !!v || "E-mail is required",
+  (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+];
+
+const showSnackbarMessage = (message) => {
+  snackbarText.value = message;
+  showSnackbar.value = true;
+};
+const subjectRules = [(v) => !!v || "Subject is required"];
+const messageRules = [(v) => !!v || "Message is required"];
+
+const formRef = ref(null);
+const submit = async () => {
+  const { valid } = await formRef.value.validate();
+  if (valid) {
+    try {
+      overlay.value = true;
+      const res = await $axios.post("/api/public/contact-form", {
+        data: formData,
+      });
+      console.log(res);
+      if (res.data.success === true) {
+        showSnackbarMessage("Sent successfully ");
+        formReset();
       }
-    },
-    reset() {
-      this.$refs.form.reset();
-    },
-  },
+      overlay.value = false;
+    } catch (e) {
+      console.log(e);
+      showSnackbarMessage("There was some error. Please try again later");
+    }
+  }
+};
+
+const formReset = () => {
+  formRef.value.reset();
 };
 </script>
-  
