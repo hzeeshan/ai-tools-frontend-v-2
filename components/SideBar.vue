@@ -17,6 +17,9 @@
           <v-list-item prepend-icon="mdi-gavel" to="/admin/categories"
             >Categories</v-list-item
           >
+          <v-list-item prepend-icon="mdi-tag" to="/admin/tags"
+            >Tags</v-list-item
+          >
           <v-list-item prepend-icon="mdi-home" to="/">Home</v-list-item>
         </v-list>
 
