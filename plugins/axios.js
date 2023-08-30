@@ -9,7 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       : "https://api.aiappsuniverse.com";
   } else {
     // Default to development in SSR context, or make a similar check based on server context
-    axios.defaults.baseURL = "http://localhost:8000";
+    axios.defaults.baseURL = "https://api.aiappsuniverse.com";
   }
 
   return {
