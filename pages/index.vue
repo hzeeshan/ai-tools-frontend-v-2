@@ -2,8 +2,9 @@
   <main>
     <HomeBanner />
 
-    <section id="planes">
-      <v-container>
+    <section id="search">
+      <SearchInput />
+      <!--  <v-container>
         <v-row>
           <v-col cols="4" md="3" lg="3">
             <div class="checkbox-wrapper">
@@ -50,7 +51,7 @@
             </div>
           </v-col>
         </v-row>
-      </v-container>
+      </v-container> -->
     </section>
     <br />
 
@@ -114,7 +115,7 @@ watch(selectedCheckboxes, (newValue) => {
 
 onMounted(async () => {
   try {
-    await getApps(currentPage.value);
+    //await getApps(currentPage.value);
   } catch (e) {
     console.log(e);
   }

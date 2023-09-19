@@ -1,6 +1,6 @@
 <template>
   <section>
-    <v-parallax height="50vh" class="parallax">
+    <v-parallax height="40vh" class="parallax">
       <div
         class="d-flex flex-column fill-height justify-center align-center text-white"
       >
