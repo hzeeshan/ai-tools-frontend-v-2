@@ -10,17 +10,19 @@
         <p class="subtitle-1 text-center">
           Browse a curated collection of the most innovative AI tools, apps, and
           extensions.
+          <br />
+
+          <v-btn to="/platforms" class="my-3 main-action-button" size="large"
+            >Dive In</v-btn
+          >
         </p>
-        <v-btn to="/platforms" class="mt-3 main-action-button" size="large"
-          >Dive In</v-btn
-        >
+        <div style="width: 70%" class="pb-5">
+          <SearchInput />
+        </div>
       </div>
     </v-parallax>
   </section>
 </template>
-
-<script setup>
-</script>
 
 <style scoped>
 .parallax {

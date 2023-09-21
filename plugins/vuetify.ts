@@ -3,7 +3,7 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 
 export default defineNuxtPlugin((nuxt) => {
-  const myCustomLightTheme = {
+  const customLightTheme = {
     dark: false,
     colors: {
       background: "#FFFFFF",
@@ -25,9 +25,9 @@ export default defineNuxtPlugin((nuxt) => {
     components,
     directives,
     theme: {
-      defaultTheme: "myCustomLightTheme",
+      defaultTheme: "customLightTheme",
       themes: {
-        myCustomLightTheme,
+        customLightTheme,
       },
     },
   });

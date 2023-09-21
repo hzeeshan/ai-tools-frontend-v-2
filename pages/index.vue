@@ -1,58 +1,6 @@
 <template>
   <main>
     <HomeBanner />
-
-    <section id="search">
-      <SearchInput />
-      <!--  <v-container>
-        <v-row>
-          <v-col cols="4" md="3" lg="3">
-            <div class="checkbox-wrapper">
-              <v-checkbox
-                label="Free"
-                color="primary"
-                hide-details
-                value="Free"
-                v-model="selectedCheckboxes"
-              ></v-checkbox>
-            </div>
-          </v-col>
-          <v-col cols="4" md="3" lg="3">
-            <div class="checkbox-wrapper">
-              <v-checkbox
-                label="Freemium"
-                hide-details
-                color="primary"
-                value="Freemium"
-                v-model="selectedCheckboxes"
-              ></v-checkbox>
-            </div>
-          </v-col>
-          <v-col cols="4" md="3" lg="3">
-            <div class="checkbox-wrapper">
-              <v-checkbox
-                label="Paid"
-                hide-details
-                color="primary"
-                value="Paid"
-                v-model="selectedCheckboxes"
-              ></v-checkbox>
-            </div>
-          </v-col>
-          <v-col cols="4" md="3" lg="3">
-            <div class="checkbox-wrapper">
-              <v-checkbox
-                label="All"
-                hide-details
-                color="primary"
-                value="All"
-                v-model="selectedCheckboxes"
-              ></v-checkbox>
-            </div>
-          </v-col>
-        </v-row>
-      </v-container> -->
-    </section>
     <br />
 
     <DisplayApps :apps="apps" v-if="apps.length > 0" />
