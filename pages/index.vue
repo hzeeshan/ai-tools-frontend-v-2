@@ -2,7 +2,7 @@
   <main>
     <HomeBanner />
     <br />
-
+    <Filter />
     <DisplayApps :apps="apps" v-if="apps.length > 0" />
 
     <section class="pb-9">

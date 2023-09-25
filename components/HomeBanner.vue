@@ -16,7 +16,7 @@
             >Dive In</v-btn
           >
         </p>
-        <div style="width: 70%" class="pb-5">
+        <div style="width: 90%" class="pb-5">
           <SearchInput />
         </div>
       </div>
