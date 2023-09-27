@@ -2,7 +2,19 @@
   <main>
     <HomeBanner />
     <br />
-    <Filter />
+    <section>
+      <v-container>
+        <v-row>
+          <v-col cols="3">
+            <Filter />
+          </v-col>
+          <v-col cols="6">list of categories</v-col>
+          <v-col cols="3">
+            <SortBy />
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
     <DisplayApps :apps="apps" v-if="apps.length > 0" />
 
     <section class="pb-9">

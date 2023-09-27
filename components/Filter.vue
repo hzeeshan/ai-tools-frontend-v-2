@@ -1,8 +1,8 @@
 <template>
-  <section>
+  <div>
     <v-container>
       <div>
-        <v-btn color="primary" @click="openFilterDialog"> Open Dialog </v-btn>
+        <v-btn color="primary" @click="openFilterDialog"> Filters </v-btn>
       </div>
       <v-row justify="center">
         <v-dialog v-model="dialog" persistent width="600">
@@ -58,7 +58,7 @@
                 <v-row class="ma-0 pa-0" no-gutters>
                   <v-col cols="6">
                     <v-checkbox
-                      v-model="pricing.free"
+                      v-model="pricing.freeTrial"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -73,7 +73,7 @@
                   <v-col cols="6">
                     <!-- Another Checkbox -->
                     <v-checkbox
-                      v-model="pricing.freemium"
+                      v-model="pricing.paid"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -86,7 +86,7 @@
                 <v-row class="ma-0 pa-0" no-gutters>
                   <v-col cols="6">
                     <v-checkbox
-                      v-model="pricing.free"
+                      v-model="pricing.contactForPricing"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -99,7 +99,7 @@
                   <v-col cols="6">
                     <!-- Another Checkbox -->
                     <v-checkbox
-                      v-model="pricing.freemium"
+                      v-model="pricing.deals"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -116,7 +116,7 @@
                 <v-row class="ma-0 pa-0" no-gutters>
                   <v-col cols="6" align-self="end">
                     <v-checkbox
-                      v-model="pricing.free"
+                      v-model="features.waitlist"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -129,7 +129,7 @@
                   <v-col cols="6" align-self="end">
                     <!-- Another Checkbox -->
                     <v-checkbox
-                      v-model="pricing.freemium"
+                      v-model="features.openSource"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -142,7 +142,7 @@
                 <v-row class="ma-0 pa-0" no-gutters>
                   <v-col cols="6">
                     <v-checkbox
-                      v-model="pricing.free"
+                      v-model="features.mobileApp"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -168,7 +168,7 @@
                   <v-col cols="6">
                     <!-- Another Checkbox -->
                     <v-checkbox
-                      v-model="pricing.freemium"
+                      v-model="features.discordCommunity"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -193,7 +193,7 @@
                 <v-row class="ma-0 pa-0" no-gutters>
                   <v-col cols="6">
                     <v-checkbox
-                      v-model="pricing.free"
+                      v-model="features.noSignupRequired"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -219,7 +219,7 @@
                   <v-col cols="6">
                     <!-- Another Checkbox -->
                     <v-checkbox
-                      v-model="pricing.freemium"
+                      v-model="features.api"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -243,7 +243,7 @@
                   <v-col cols="6">
                     <!-- Another Checkbox -->
                     <v-checkbox
-                      v-model="pricing.freemium"
+                      v-model="features.browserExtension"
                       class="no-margin-checkbox"
                     >
                       <template v-slot:label>
@@ -283,24 +283,126 @@
         </v-dialog>
       </v-row>
     </v-container>
-  </section>
+  </div>
 </template>
 
 <script setup>
-let dialog = ref(true);
+const { $axios } = useNuxtApp();
+const router = useRouter();
+let dialog = ref(false);
 
-const pricing = ref({
-  free: "",
-  freemium: "",
+// Pricing checkboxes
+const pricing = reactive({
+  free: false,
+  freemium: false,
+  freeTrial: false,
+  paid: false,
+  contactForPricing: false,
+  deals: false,
+});
+
+// Features checkboxes
+const features = reactive({
+  waitlist: false,
+  openSource: false,
+  mobileApp: false,
+  discordCommunity: false,
+  noSignupRequired: false,
+  api: false,
+  browserExtension: false,
 });
 
 const openFilterDialog = () => {
   dialog.value = true;
 };
 
-const handleApplyFilters = () => {
-  console.log("apply filters was clicked ....");
+const fetchFilteredData = async (queryString) => {
+  //console.log(queryString);
+  const response = await $axios.get(`/api/tools/search?${queryString}`);
+  console.log(response); // handle the response as needed, update your state, etc.
+  return response; // or process the response and return the processed data
 };
+
+const updateFiltersFromQueryParams = async () => {
+  const query = router.currentRoute.value.query;
+
+  if (query.pricing) {
+    const pricingValues = Array.isArray(query.pricing)
+      ? query.pricing
+      : [query.pricing];
+    pricingValues.forEach((value) => {
+      if (pricing[value] !== undefined) {
+        pricing[value] = true;
+      }
+    });
+  }
+
+  if (query.feature) {
+    const featureValues = Array.isArray(query.feature)
+      ? query.feature
+      : [query.feature];
+    featureValues.forEach((value) => {
+      if (features[value] !== undefined) {
+        features[value] = true;
+      }
+    });
+  }
+
+  if (Object.keys(query).length > 0) {
+    const queryString = new URLSearchParams(query).toString();
+    await fetchFilteredData(queryString);
+  }
+};
+
+const handleApplyFilters = async () => {
+  let featureParams = [];
+  let pricingParams = [];
+
+  // Collecting selected pricing and feature options
+  for (const [key, value] of Object.entries(pricing)) {
+    if (value) {
+      pricingParams.push(key);
+    }
+  }
+  for (const [key, value] of Object.entries(features)) {
+    if (value) {
+      featureParams.push(key);
+    }
+  }
+
+  const featureQueryString = featureParams.map((f) => `feature=${f}`).join("&");
+  const pricingQueryString = pricingParams.map((p) => `pricing=${p}`).join("&");
+  const queryString = [featureQueryString, pricingQueryString]
+    .filter(Boolean)
+    .join("&");
+
+  const paramsArray = queryString.split("&").map((param) => param.split("="));
+  const queryObject = paramsArray.reduce((obj, [key, value]) => {
+    if (obj[key]) {
+      if (Array.isArray(obj[key])) {
+        obj[key].push(value);
+      } else {
+        obj[key] = [obj[key], value];
+      }
+    } else {
+      obj[key] = value;
+    }
+    return obj;
+  }, {});
+
+  // Update the URL without reloading the page
+  router.push({
+    path: router.currentRoute.value.path,
+    query: queryObject,
+  });
+
+  // Fetch and handle filtered data
+  await fetchFilteredData(queryString);
+};
+
+onMounted(() => {
+  updateFiltersFromQueryParams();
+});
 </script>
 <style scoped>
 .custom-checkbox-container .v-input--density-default {
