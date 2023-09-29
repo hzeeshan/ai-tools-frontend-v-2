@@ -19,14 +19,6 @@ const { $axios } = useNuxtApp();
 const loading = ref(false);
 const searchQuery = ref("");
 
-function updated(item) {
-  if (item) {
-    navigateTo({
-      path: `/ai-apps/${item.slug}`,
-    });
-  }
-}
-
 const triggerSearch = async () => {
   const query = searchQuery.value.trim();
 

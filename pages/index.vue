@@ -4,12 +4,14 @@
     <br />
     <section>
       <v-container>
-        <v-row>
-          <v-col cols="3">
+        <v-row class="mx-auto">
+          <v-col cols="2">
             <Filter />
           </v-col>
-          <v-col cols="6">list of categories</v-col>
-          <v-col cols="3">
+          <v-col cols="8">
+            <TagsSlides />
+          </v-col>
+          <v-col cols="2">
             <SortBy />
           </v-col>
         </v-row>

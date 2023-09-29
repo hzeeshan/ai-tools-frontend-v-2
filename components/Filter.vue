@@ -1,9 +1,22 @@
 <template>
   <div>
     <v-container>
-      <div>
-        <v-btn color="primary" @click="openFilterDialog"> Filters </v-btn>
+      <div v-if="selectedFilterCount > 0">
+        <v-badge :content="selectedFilterCount" color="primary">
+          <v-btn @click="openFilterDialog" variant="outlined">
+            Filters
+            <v-icon>mdi-filter-outline</v-icon> </v-btn
+          ><br />
+        </v-badge>
+        <div>
+          <span class="clear-filter-button" @click="clearFilter"> Clear </span>
+        </div>
       </div>
+      <v-btn v-else @click="openFilterDialog" variant="outlined">
+        Filters
+        <v-icon>mdi-filter-outline</v-icon>
+      </v-btn>
+
       <v-row justify="center">
         <v-dialog v-model="dialog" persistent width="600">
           <v-card>
@@ -398,6 +411,39 @@ const handleApplyFilters = async () => {
 
   // Fetch and handle filtered data
   await fetchFilteredData(queryString);
+  dialog.value = false;
+};
+
+const selectedFilterCount = computed(() => {
+  const query = router.currentRoute.value.query;
+  let count = 0;
+
+  if (query.pricing) {
+    count += Array.isArray(query.pricing) ? query.pricing.length : 1;
+  }
+
+  if (query.feature) {
+    count += Array.isArray(query.feature) ? query.feature.length : 1;
+  }
+
+  return count;
+});
+
+const clearFilter = async () => {
+  // Reset the state of reactive objects
+  for (const key in pricing) {
+    pricing[key] = false;
+  }
+
+  for (const key in features) {
+    features[key] = false;
+  }
+
+  // If you don't need to navigate to a different path, just reset the query parameters
+  await router.push({ path: router.currentRoute.value.path, query: {} });
+
+  // Optionally, fetch initial unfiltered data
+  //await fetchInitialData();
 };
 
 onMounted(() => {
@@ -407,5 +453,10 @@ onMounted(() => {
 <style scoped>
 .custom-checkbox-container .v-input--density-default {
   --v-input-control-height: 0;
+}
+.clear-filter-button {
+  text-decoration: underline;
+  color: #0060df;
+  cursor: pointer;
 }
 </style>
