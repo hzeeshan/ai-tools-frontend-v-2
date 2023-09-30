@@ -44,7 +44,7 @@ const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 let selectedCheckboxes = ref([]);
 
-const getApps = async (page, licenseTypes = []) => {
+/* const getApps = async (page, licenseTypes = []) => {
   try {
     const licenseTypeQueryString = licenseTypes
       .map(encodeURIComponent)
@@ -64,7 +64,7 @@ const getApps = async (page, licenseTypes = []) => {
   } catch (e) {
     console.log(e + " error");
   }
-};
+}; */
 
 const changePage = (page) => {
   getApps(page);
