@@ -5,26 +5,33 @@
     <section>
       <v-container>
         <v-row class="mx-auto">
-          <v-col cols="2">
+          <v-col cols="2" class="align-self-center">
             <Filter />
           </v-col>
-          <v-col cols="8">
+          <v-col cols="8" class="align-self-center">
             <TagsSlides />
           </v-col>
-          <v-col cols="2">
+          <v-col cols="2" class="align-self-center">
             <SortBy />
           </v-col>
         </v-row>
       </v-container>
     </section>
-    <DisplayApps :apps="apps" v-if="apps.length > 0" />
+    <section id="list-of-tools">
+      <v-container>
+        <ListOfTools :tools="tools" v-if="tools.length > 0" />
 
-    <section class="pb-9">
-      <v-pagination
-        v-model="currentPage"
-        :length="lastPage"
-        @update:modelValue="changePage"
-      />
+        <v-row
+          v-if="isLoading"
+          class="text-center justify-center my-5"
+          style="width: 100%"
+        >
+          <v-progress-circular
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </v-row>
+      </v-container>
     </section>
   </main>
 </template>
@@ -37,63 +44,43 @@ useSeoMeta({
 });
 
 const { $axios } = useNuxtApp();
-let apps = ref([]);
-let currentPage = ref(1);
-let lastPage = ref(0);
+let tools = ref([]);
 const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
-let selectedCheckboxes = ref([]);
+const page = ref(1);
+const isLoading = ref(false);
 
-/* const getApps = async (page, licenseTypes = []) => {
+const getTools = async () => {
+  isLoading.value = true;
   try {
-    const licenseTypeQueryString = licenseTypes
-      .map(encodeURIComponent)
-      .join(",");
-
-    const { data } = await $axios.get(
-      `${baseUrl}/apps?page=${page}&license_type=${licenseTypeQueryString}`
-    );
-
-    const { data: appData, current_page, last_page } = data;
-
-    if (appData) {
-      apps.value = appData;
-      currentPage.value = current_page;
-      lastPage.value = last_page;
-    }
-  } catch (e) {
-    console.log(e + " error");
+    const response = await $axios.get(`/api/tools?page=${page.value}`);
+    tools.value.push(...response.data);
+    page.value++;
+  } catch (error) {
+    console.error("An error occurred while fetching data:", error);
+  } finally {
+    isLoading.value = false;
   }
-}; */
-
-const changePage = (page) => {
-  getApps(page);
 };
 
-watch(selectedCheckboxes, (newValue) => {
-  console.log("Checkboxes changed:", newValue);
-  getApps(currentPage.value, newValue);
+const onScroll = () => {
+  const nearBottom =
+    window.innerHeight + window.scrollY >=
+    document.documentElement.scrollHeight - 500;
+  if (nearBottom && !isLoading.value) {
+    getTools();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", onScroll);
+  getTools();
 });
 
-onMounted(async () => {
-  try {
-    //await getApps(currentPage.value);
-  } catch (e) {
-    console.log(e);
-  }
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", onScroll);
 });
 </script>
 
 <style scoped>
-.section-padding {
-  padding-top: 50px;
-}
-.checkbox-wrapper {
-  text-align: center;
-  width: 100%;
-}
-
-.checkbox-wrapper .v-checkbox {
-  display: inline-block;
-}
 </style>
