@@ -23,11 +23,14 @@
 
       <v-toolbar-items v-if="!mobile">
         <v-btn flat to="/" nuxt> Home </v-btn>
-        <v-btn flat to="/categories" nuxt> Categories </v-btn>
+        <v-btn flat to="/tags" nuxt> Tags </v-btn>
         <v-btn flat to="/platforms" nuxt> Platforms </v-btn>
         <v-btn flat to="/contact" nuxt> Contact Us </v-btn>
         <v-btn flat @click="logout" nuxt v-if="$userStore.id"> Logout </v-btn>
         <v-btn flat to="/auth/login" nuxt v-if="!$userStore.id"> Login </v-btn>
+        <v-btn flat to="/auth/register" nuxt v-if="!$userStore.id"
+          >Register</v-btn
+        >
 
         <v-btn flat to="/blog" nuxt v-if="mobile"> Blog </v-btn>
         <v-btn flat to="/admin/dashboard" nuxt v-if="$userStore.isLoggedIn">
@@ -80,9 +83,9 @@ let drawer = ref(false);
 const navItems = [
   { title: "Home", icon: "mdi-home", path: "/" },
   {
-    title: "Categories",
+    title: "Tags",
     icon: "mdi-format-list-bulleted",
-    path: "/categories",
+    path: "/tags",
   },
   { title: "Platforms", icon: "mdi-desktop-classic", path: "/platforms" },
   { title: "Contact Us", icon: "mdi-contacts", path: "/contact" },

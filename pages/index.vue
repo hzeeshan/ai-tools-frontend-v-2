@@ -1,6 +1,6 @@
 <template>
   <main>
-    <HomeBanner />
+    <HomeBanner @search="handleSearch" />
     <br />
     <section>
       <v-container>
@@ -61,6 +61,11 @@ const getTools = async () => {
   } finally {
     isLoading.value = false;
   }
+};
+
+const handleSearch = (result) => {
+  //console.log(result.data);
+  tools.value = result.data;
 };
 
 const onScroll = () => {

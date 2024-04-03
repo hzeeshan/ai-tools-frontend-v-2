@@ -4,7 +4,7 @@
       <v-container>
         <v-card class="pa-9">
           <v-card-text>
-            <h2 class="text-h5 mb-2 text-center">Select Categories</h2>
+            <h2 class="text-h5 mb-2 text-center">Select Tags</h2>
             <v-chip-group
               class="d-flex justify-center"
               v-model="selectedCategories"

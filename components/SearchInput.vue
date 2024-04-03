@@ -15,6 +15,8 @@
 </template>
 
 <script setup>
+import { defineEmits } from "vue";
+const emit = defineEmits(["search"]);
 const { $axios } = useNuxtApp();
 const loading = ref(false);
 const searchQuery = ref("");
@@ -25,21 +27,15 @@ const triggerSearch = async () => {
   if (query !== "") {
     try {
       const response = await $axios.get(`/api/tools/search?query=${query}`);
-      console.log(response);
-      console.log("Received data:", data);
+      //console.log("Results from Search: " + response.data);
+      emit("search", response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
 };
 
-const placeholders = [
-  "I want help with my Math work",
-  "I want to create logo for my business",
-  "I want to book a flight with lowest price",
-  "ChatGPT",
-  "Midjourney",
-];
+const placeholders = ["Search", "ChatGPT", "Midjourney"];
 const currentPlaceholder = ref(placeholders[0]);
 let index = 0;
 const isFocused = ref(false);

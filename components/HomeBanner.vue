@@ -17,12 +17,20 @@
           >
         </p>
         <div style="width: 90%" class="pb-5">
-          <SearchInput />
+          <SearchInput @search="handleSearch" />
         </div>
       </div>
     </v-parallax>
   </section>
 </template>
+
+<script setup>
+import { defineEmits } from "vue";
+const emit = defineEmits(["search"]);
+const handleSearch = (results) => {
+  emit("search", results);
+};
+</script>
 
 <style scoped>
 .parallax {
