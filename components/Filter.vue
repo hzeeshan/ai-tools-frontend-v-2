@@ -300,9 +300,12 @@
 </template>
 
 <script setup>
+import { defineEmits } from "vue";
+
 const { $axios } = useNuxtApp();
 const router = useRouter();
 let dialog = ref(false);
+const emit = defineEmits(["filter", "clearFilters"]);
 
 // Pricing checkboxes
 const pricing = reactive({
@@ -330,10 +333,16 @@ const openFilterDialog = () => {
 };
 
 const fetchFilteredData = async (queryString) => {
-  //console.log(queryString);
-  const response = await $axios.get(`/api/tools/search?${queryString}`);
-  console.log(response); // handle the response as needed, update your state, etc.
-  return response; // or process the response and return the processed data
+  try {
+    const response = await $axios.get(`/api/tools/search?${queryString}`);
+    const { data } = response.data;
+    if (response.status === 200) {
+      emit("filter", data);
+    }
+    return response;
+  } catch (error) {
+    console.error("Failed to fetch filtered data:", error);
+  }
 };
 
 const updateFiltersFromQueryParams = async () => {
@@ -439,11 +448,9 @@ const clearFilter = async () => {
     features[key] = false;
   }
 
-  // If you don't need to navigate to a different path, just reset the query parameters
   await router.push({ path: router.currentRoute.value.path, query: {} });
 
-  // Optionally, fetch initial unfiltered data
-  //await fetchInitialData();
+  emit("clearFilters");
 };
 
 onMounted(() => {

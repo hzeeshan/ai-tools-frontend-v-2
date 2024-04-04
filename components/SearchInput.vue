@@ -26,9 +26,10 @@ const triggerSearch = async () => {
 
   if (query !== "") {
     try {
+      loading.value = true;
       const response = await $axios.get(`/api/tools/search?query=${query}`);
-      //console.log("Results from Search: " + response.data);
       emit("search", response.data);
+      loading.value = false;
     } catch (error) {
       console.error("Error fetching data:", error);
     }

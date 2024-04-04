@@ -6,13 +6,16 @@
       <v-container>
         <v-row class="mx-auto">
           <v-col cols="2" class="align-self-center">
-            <Filter />
+            <Filter
+              @filter="handleFilterResults"
+              @clearFilters="getInitialData"
+            />
           </v-col>
           <v-col cols="8" class="align-self-center">
             <TagsSlides />
           </v-col>
           <v-col cols="2" class="align-self-center">
-            <SortBy />
+            <SortBy @sortBy="handleSortByResults" />
           </v-col>
         </v-row>
       </v-container>
@@ -64,8 +67,21 @@ const getTools = async () => {
 };
 
 const handleSearch = (result) => {
-  //console.log(result.data);
   tools.value = result.data;
+};
+
+const handleFilterResults = (result) => {
+  tools.value = result;
+};
+
+const handleSortByResults = (result) => {
+  tools.value = result;
+};
+
+const getInitialData = async () => {
+  tools.value = [];
+  page.value = 1;
+  await getTools();
 };
 
 const onScroll = () => {
@@ -87,5 +103,3 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
-</style>

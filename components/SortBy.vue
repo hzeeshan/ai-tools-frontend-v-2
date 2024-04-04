@@ -14,6 +14,8 @@
 </template>
 
 <script setup>
+import { defineEmits } from "vue";
+const emit = defineEmits(["sortBy"]);
 const { $axios } = useNuxtApp();
 const router = useRouter();
 
@@ -39,9 +41,13 @@ watch(selectedSortOption, async (newVal) => {
   }
 });
 
-// Function to fetch sorted data
 const fetchSortedData = async (queryString) => {
   const response = await $axios.get(`/api/tools/search?${queryString}`);
-  console.log(response); // Handle the response, update your state, etc.
+
+  const { data } = response.data;
+  if (response.status === 200) {
+    emit("sortBy", data);
+  }
+  return response;
 };
 </script>
