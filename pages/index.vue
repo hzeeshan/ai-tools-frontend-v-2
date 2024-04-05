@@ -52,13 +52,20 @@ const config = useRuntimeConfig();
 const baseUrl = config.public.apiBaseUrl;
 const page = ref(1);
 const isLoading = ref(false);
+const isLastPage = ref(false);
 
 const getTools = async () => {
+  if (isLoading.value || isLastPage.value) return;
+
   isLoading.value = true;
   try {
     const response = await $axios.get(`/api/tools?page=${page.value}`);
-    tools.value.push(...response.data);
-    page.value++;
+    if (response.data.length > 0) {
+      tools.value.push(...response.data);
+      page.value++;
+    } else {
+      isLastPage.value = true;
+    }
   } catch (error) {
     console.error("An error occurred while fetching data:", error);
   } finally {

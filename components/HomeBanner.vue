@@ -7,14 +7,14 @@
         <h1 class="text-h4 font-weight-bold py-3 text-center">
           Discover the Universe of AI Tools
         </h1>
-        <p class="subtitle-1 text-center">
+        <p class="subtitle-1 text-center pb-7 pt-4">
           Browse a curated collection of the most innovative AI tools, apps, and
           extensions.
           <br />
 
-          <v-btn to="/platforms" class="my-3 main-action-button" size="large"
+          <!-- <v-btn to="/platforms" class="my-3 main-action-button" size="large"
             >Dive In</v-btn
-          >
+          > -->
         </p>
         <div style="width: 90%" class="pb-5">
           <SearchInput @search="handleSearch" />

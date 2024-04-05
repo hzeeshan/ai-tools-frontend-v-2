@@ -59,11 +59,11 @@
                 </v-row>
 
                 <v-row class="d-flex justify-start">
-                  <v-btn color="error" @click="reset" class="ml-5">
+                  <!-- <v-btn color="error" @click="reset" class="ml-5">
                     Reset
-                  </v-btn>
+                  </v-btn> -->
                   <v-btn color="primary" @click="submit" class="ml-3 mb-3">
-                    Send
+                    Submit
                   </v-btn>
                 </v-row>
               </v-form>
@@ -142,6 +142,6 @@ const submit = async () => {
 };
 
 const formReset = () => {
-  formRef.value.reset();
+  //formRef.value.reset();
 };
 </script>

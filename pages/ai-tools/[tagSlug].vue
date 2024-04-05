@@ -1,7 +1,7 @@
 <template>
   <section>
     <v-container>
-      <h1>{{ tagSlug }}</h1>
+      <h1 class="pl-3 py-5 text-h5 font-weight-bold">#{{ tagSlug }}</h1>
 
       <ListOfTools :tools="tools" v-if="tools.length > 0" />
 
@@ -31,7 +31,7 @@ const isLoading = ref(false);
 const isLastPage = ref(false);
 
 const fetchTools = async () => {
-  if (isLoading.value || isLastPage.value) return; // Prevent fetch if loading or last page reached
+  if (isLoading.value || isLastPage.value) return;
 
   isLoading.value = true;
   try {
@@ -42,7 +42,6 @@ const fetchTools = async () => {
       tools.value.push(...response.data.data);
       page.value++;
     } else {
-      // If no data is returned, we've hit the last page
       isLastPage.value = true;
     }
   } catch (error) {

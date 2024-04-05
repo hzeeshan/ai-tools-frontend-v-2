@@ -24,7 +24,7 @@
       <v-toolbar-items v-if="!mobile">
         <v-btn flat to="/" nuxt> Home </v-btn>
         <v-btn flat to="/tags" nuxt> Tags </v-btn>
-        <v-btn flat to="/platforms" nuxt> Platforms </v-btn>
+        <!-- <v-btn flat to="/platforms" nuxt> Platforms </v-btn> -->
         <v-btn flat to="/contact" nuxt> Contact Us </v-btn>
         <v-btn flat @click="logout" nuxt v-if="$userStore.id"> Logout </v-btn>
         <v-btn flat to="/auth/login" nuxt v-if="!$userStore.id"> Login </v-btn>
@@ -87,7 +87,7 @@ const navItems = [
     icon: "mdi-format-list-bulleted",
     path: "/tags",
   },
-  { title: "Platforms", icon: "mdi-desktop-classic", path: "/platforms" },
+  /* { title: "Platforms", icon: "mdi-desktop-classic", path: "/platforms" }, */
   { title: "Contact Us", icon: "mdi-contacts", path: "/contact" },
   { title: "Login", icon: "mdi-login", path: "/auth/login" },
   { title: "Blog", icon: "mdi-atom", path: "/blog" },
