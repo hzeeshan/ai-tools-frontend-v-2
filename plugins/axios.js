@@ -9,10 +9,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   if (typeof window !== "undefined") {
     axios.defaults.baseURL = window.location.hostname.includes("localhost")
       ? "http://localhost:8000"
-      : "https://api.aiappsuniverse.com";
+      : "https://api.aitoolsuniverse.com";
   } else {
     // Default to development in SSR context, or make a similar check based on server context
-    axios.defaults.baseURL = "https://api.aiappsuniverse.com";
+    axios.defaults.baseURL = "https://api.aitoolsuniverse.com";
   }
 
   axios.interceptors.request.use(
