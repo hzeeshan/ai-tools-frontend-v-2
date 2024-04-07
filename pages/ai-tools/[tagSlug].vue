@@ -45,7 +45,7 @@ const fetchTools = async () => {
       isLastPage.value = true;
     }
   } catch (error) {
-    console.error("Error fetching tools:", error);
+    console.log("Error fetching tools:", error);
   } finally {
     isLoading.value = false;
   }

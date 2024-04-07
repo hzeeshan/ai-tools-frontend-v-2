@@ -52,7 +52,7 @@
                 </v-chip>
               </v-chip-group>
             </div>
-            <div id="social-links">
+            <div v-if="tool.social_links.length > 0" id="social-links">
               <p>Social Links</p>
               <div class="d-flex flex-row py-2">
                 <span
