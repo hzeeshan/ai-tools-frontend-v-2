@@ -82,11 +82,14 @@
     </section>
     <section id="reviews">
       <v-container>
-        <CreateReview />
+        <CreateReview v-if="tool?.id" :appId="tool.id" />
       </v-container>
     </section>
     <section id="related-tools">
-      <ListOfTools :tools="relatedTools" v-if="relatedTools.length > 0" />
+      <ListOfTools
+        :tools="relatedTools"
+        v-if="relatedTools && relatedTools.length > 0"
+      />
     </section>
   </div>
 </template>
@@ -96,17 +99,14 @@ const { $axios } = useNuxtApp();
 const route = useRoute();
 const config = useRuntimeConfig();
 const appBaseURL = config.public.appBaseUrl;
-const slug = route.params.slug;
+
 const tool = ref(null);
 const features = ref([]);
 const relatedTools = ref([]);
 
-const getToolBySlug = async () => {
+const getToolBySlug = async (slug) => {
   try {
-    if (!slug) throw new Error("Slug is not defined");
     const response = await $axios.get(`/api/tool/${slug}`);
-    console.log(response.data.tool);
-    console.log(response.data.relatedTools);
     tool.value = response.data.tool;
     relatedTools.value = response.data.relatedTools;
   } catch (error) {
@@ -139,7 +139,10 @@ watch(tool, (newVal) => {
     }
   }
 });
-getToolBySlug();
+onMounted(async () => {
+  const slug = route.params.slug;
+  await getToolBySlug(slug);
+});
 </script>
 <style scoped>
 .v-breadcrumbs {

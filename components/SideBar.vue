@@ -14,9 +14,9 @@
           <v-list-item prepend-icon="mdi-account-box" to="/admin/apps">
             Apps</v-list-item
           >
-          <v-list-item prepend-icon="mdi-gavel" to="/admin/categories"
+          <!-- <v-list-item prepend-icon="mdi-gavel" to="/admin/categories"
             >Categories</v-list-item
-          >
+          > -->
           <v-list-item prepend-icon="mdi-tag" to="/admin/tags"
             >Tags</v-list-item
           >
@@ -39,17 +39,17 @@
             <v-card>
               <v-card-text>
                 <div class="mx-auto text-center">
-                  <v-avatar color="brown">
+                  <!-- <v-avatar color="brown">
                     <span class="text-h5">{{ user.initials }}</span>
-                  </v-avatar>
+                  </v-avatar> -->
                   <h3>{{ $userStore.name }}</h3>
                   <p class="text-caption mt-1">
                     {{ $userStore.email }}
                   </p>
-                  <v-divider class="my-3"></v-divider>
+                  <!-- <v-divider class="my-3"></v-divider>
                   <v-btn rounded variant="text" @click="getUser">
                     Edit Account
-                  </v-btn>
+                  </v-btn> -->
                   <v-divider class="my-3"></v-divider>
                   <v-btn rounded variant="text" @click="logout"> Logout </v-btn>
                 </div>
@@ -58,7 +58,7 @@
           </v-menu>
         </template>
       </v-navigation-drawer>
-      <v-main style="height: calc(100vh - 5vh)"></v-main>
+      <v-main style="height: calc(100vh - 2vh)"></v-main>
     </v-layout>
   </v-card>
 </template>

@@ -75,9 +75,15 @@ const submit = async () => {
     if (valid) {
       await $userStore.getToken();
       await $userStore.login(email.value, password.value);
-      navigateTo({
-        path: `/admin/dashboard`,
-      });
+      if ($userStore.hasRole("admin")) {
+        navigateTo({
+          path: `/admin/dashboard`,
+        });
+      } else {
+        navigateTo({
+          path: `/`,
+        });
+      }
     }
   } catch (e) {
     console.log(e);

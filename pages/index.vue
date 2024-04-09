@@ -60,9 +60,11 @@ const getTools = async () => {
   isLoading.value = true;
   try {
     const response = await $axios.get(`/api/tools?page=${page.value}`);
-    if (response.data.length > 0) {
-      tools.value.push(...response.data);
-      page.value++;
+    const { data, current_page, last_page } = response.data;
+    if (data.length > 0) {
+      tools.value.push(...data);
+      page.value = current_page + 1; // Prepare for the next page
+      isLastPage.value = current_page === last_page;
     } else {
       isLastPage.value = true;
     }
@@ -74,6 +76,7 @@ const getTools = async () => {
 };
 
 const handleSearch = (result) => {
+  console.log(result);
   tools.value = result.data;
 };
 

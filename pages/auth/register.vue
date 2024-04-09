@@ -74,6 +74,7 @@
           </v-card>
         </v-col>
       </v-row>
+      <Snackbar v-model="showSnackbar" :text="snackbarText" />
     </v-container>
   </v-main>
 </template>
@@ -86,6 +87,8 @@ let name = ref("");
 let email = ref("");
 let password = ref("");
 let confirmPassword = ref("");
+let showSnackbar = ref(false);
+let snackbarText = ref("");
 
 let nameRules = [(v) => !!v || "Name is required"];
 let emailRules = [
@@ -100,22 +103,31 @@ let confirmPasswordRules = computed(() => {
   ];
 });
 
+const showSnackbarMessage = (message) => {
+  snackbarText.value = message;
+  showSnackbar.value = true;
+};
+
 let registationForm = ref(null);
 
 const submit = async () => {
   const { valid } = await registationForm.value.validate();
   if (valid) {
-    // registration logic goes here
-
-    await $userStore.getToken();
-    const res = await $userStore.register(
-      name.value,
-      email.value,
-      password.value,
-      confirmPassword.value
-    );
-    console.log(res);
-    console.log("submitted ...");
+    try {
+      await $userStore.getToken();
+      await $userStore.register(
+        name.value,
+        email.value,
+        password.value,
+        confirmPassword.value
+      );
+      navigateTo({
+        path: `/admin/dashboard`,
+      });
+    } catch (e) {
+      console.log(e);
+      showSnackbarMessage(e.response.data.message);
+    }
   }
 };
 

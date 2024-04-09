@@ -5,19 +5,20 @@
     </Head>
     <section class="d-flex justify-space-between mx-16 my-9">
       <div>
-        <h1>All Apps</h1>
+        <h1>List of Tools</h1>
       </div>
       <div>
         <v-btn color="primary" to="/admin/apps/create">Create New App</v-btn>
       </div>
     </section>
     <section id="apps">
-      <DisplayApps
+      <ListOfTools
+        :tools="tools"
+        v-if="tools.length > 0"
         @editButtonClicked="editButtonClicked"
         @deleteButtonClicked="showConfirmDialog"
-        :apps="apps"
-        v-if="apps.length > 0"
       />
+
       <v-pagination
         v-if="lastPage > 1"
         v-model="currentPage"
@@ -47,26 +48,32 @@ definePageMeta({
   middleware: "auth",
 });
 
-let apps = ref([]);
+let tools = ref([]);
 let currentPage = ref(1);
 let lastPage = ref(0);
 let selectedAppId = ref(null);
 const showSnackbar = ref(false);
 const snackbarText = ref("");
 
-const getApps = async (page) => {
-  const { data } = await $axios.get(`/api/apps?page=${page}`);
-  const { data: appData, current_page, last_page } = data;
+const getTools = async (page = 1) => {
+  try {
+    const response = await $axios.get(`/api/tools?page=${page}`);
+    const { data, current_page, last_page } = response.data;
 
-  if (appData) {
-    apps.value = appData;
+    tools.value = data;
     currentPage.value = current_page;
     lastPage.value = last_page;
+  } catch (error) {
+    console.error(
+      "Error fetching tools:",
+      error.response?.data || error.message
+    );
   }
 };
-getApps();
+
+getTools();
 const changePage = (page) => {
-  getApps(page);
+  getTools(page);
 };
 
 const editButtonClicked = (appId) => {
@@ -81,14 +88,14 @@ const showConfirmDialog = async (appId) => {
 
 const handleConfirm = async () => {
   const res = await $axios.delete(
-    `/api/public/delete-app/${selectedAppId.value}`
+    `/api/public/delete-tool/${selectedAppId.value}`
   );
 
   if (res.data.success == true) {
     snackbarText.value = "App Deleted Successfully";
     showSnackbar.value = true;
 
-    getApps();
+    getTools();
   }
 };
 </script>

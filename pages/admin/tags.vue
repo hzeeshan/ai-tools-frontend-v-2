@@ -108,10 +108,10 @@ const editTag = (tag) => {
   formData.selectedTagId = tag.id;
 };
 const deleteTag = async (tag) => {
-  console.log(tag.id);
+  //console.log(tag.id);
   if (confirm("Are you sure ?")) {
     try {
-      const res = await $axios.delete(`/api/public/tag/${tag.id}`);
+      const res = await $axios.delete(`/api/tag/delete/${tag.id}`);
       //console.log(res.data.success);
       if (res.data.success == true) {
         showSnackbarMessage("Deleted Successfully");
@@ -145,6 +145,9 @@ const submit = async () => {
 
       closeDialog();
       getListOfTags();
+    }
+    if (res.data.success === false) {
+      showSnackbarMessage("Error: " + res.data.message);
     }
   } catch (e) {
     console.log(e);

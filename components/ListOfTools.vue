@@ -38,6 +38,31 @@
             </div>
           </v-card-text>
 
+          <v-card-actions class="d-flex justify-space-between">
+            <!-- <v-btn
+              color="primary"
+              variant="outlined"
+              :to="`/tool/${tool.slug}`"
+            >
+              Explore
+            </v-btn> -->
+            <v-spacer></v-spacer>
+            <div class="d-flex align-center" v-if="$userStore.hasRole('admin')">
+              <v-icon
+                @click="emit('editButtonClicked', tool.id)"
+                icon="mdi-pencil"
+                class="pr-3"
+                color="surface-variant"
+              ></v-icon>
+              <v-icon
+                icon="mdi-delete"
+                color="surface-variant"
+                class="delete-button"
+                @click="emit('deleteButtonClicked', tool.id)"
+              ></v-icon>
+            </div>
+          </v-card-actions>
+
           <v-divider class="mx-4 mb-1"></v-divider>
 
           <div
@@ -85,6 +110,7 @@
 </template>
 
 <script setup>
+const emit = defineEmits(["editButtonClicked", "deleteButtonClicked"]);
 const config = useRuntimeConfig();
 const appBaseURL = config.public.appBaseUrl;
 const props = defineProps({
@@ -94,3 +120,10 @@ const props = defineProps({
   },
 });
 </script>
+
+<style scoped>
+.delete-button:hover {
+  cursor: pointer;
+  color: red;
+}
+</style>

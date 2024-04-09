@@ -39,35 +39,6 @@
         </v-col>
 
         <v-col cols="12" sm="12">
-          <v-select
-            :items="platforms"
-            label="Select Platforms*"
-            required
-            variant="outlined"
-            v-model="formData.platform_id"
-            :rules="rules.platform"
-            item-title="name"
-            item-value="id"
-            :error-messages="serverErrors.platform_id"
-            @input="resetServerError('platform_id')"
-            @update:modelValue="getRelatedCategories"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="12">
-          <v-select
-            :items="categories"
-            label="Select Categories*"
-            required
-            variant="outlined"
-            v-model="formData.category_id"
-            :rules="rules.category"
-            item-title="name"
-            item-value="id"
-            :error-messages="serverErrors.category_id"
-            @input="resetServerError('category_id')"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" sm="12">
           <v-combobox
             clearable
             chips
@@ -87,30 +58,39 @@
             label="Website"
             required
             variant="outlined"
-            v-model="formData.website_link"
+            v-model="formData.tool_link"
             :rules="rules.website"
-            :error-messages="serverErrors.website_link"
             @input="resetServerError('website_link')"
           ></v-text-field>
         </v-col>
         <v-col cols="12" sm="12">
-          <v-select
-            :items="licenceTypes"
-            label="Select Licence Type*"
+          <v-text-field
+            label="Price"
             required
             variant="outlined"
-            v-model="formData.license_type_id"
-            :rules="rules.licenceType"
-            item-title="name"
-            item-value="id"
-            :error-messages="serverErrors.license_type_id"
-            @input="resetServerError('license_type_id')"
-          ></v-select>
+            v-model="formData.price"
+            placeholder="$10"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="12">
+          <v-text-field
+            label="Plan Type"
+            required
+            variant="outlined"
+            v-model="formData.planType"
+            placeholder="Free | Free Trial | Paid"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="12" sm="12">
+          <v-checkbox
+            label="Is Verified"
+            v-model="formData.is_verified"
+          ></v-checkbox>
         </v-col>
 
         <v-col cols="12" sm="12">
           <v-file-input
-            label="Main Image"
+            label="Image"
             variant="outlined"
             v-model="formData.mainImage"
             :error-messages="serverErrors.mainImage"
@@ -122,83 +102,15 @@
           <!-- Display the existing main image separately -->
           <nuxt-img
             v-if="formData.existingMainImage"
-            :src="`${appBaseURL}/${formData.existingMainImage.path}`"
+            :src="`${appBaseURL}/${formData.existingMainImage}`"
             width="150"
             height="84"
             sizes="xs:150px sm:300px md:450px lg:600px"
             fit="cover"
           ></nuxt-img>
         </v-col>
-        <v-col cols="12" sm="12">
-          <v-file-input
-            label="Other Images"
-            variant="outlined"
-            v-model="formData.otherImages"
-            chips
-            multiple
-            :error-messages="serverErrors.otherImages"
-            @input="resetServerError('otherImages')"
-            accept="image/png, image/jpeg, image/jpg"
-          ></v-file-input>
-        </v-col>
-        <v-col
-          v-for="image in formData.existingOtherImages"
-          :key="image.id"
-          class="d-flex child-flex"
-          cols="4"
-        >
-          <v-img :src="`${appBaseURL}/${image.path}`" aspect-ratio="1" cover>
-            <v-icon class="delete-icon" @click="showConfirmDialog(image.id)">
-              mdi-close-circle
-            </v-icon>
-          </v-img>
-        </v-col>
       </v-row>
-      <v-row v-for="(plan, index) in formData.plans" :key="index">
-        <v-col cols="12" sm="5">
-          <v-text-field
-            v-model="plan.name"
-            label="Plan Name"
-            required
-            variant="outlined"
-            :rules="rules.planName"
-          ></v-text-field>
-        </v-col>
 
-        <v-col cols="12" sm="5">
-          <v-text-field
-            v-model="plan.price"
-            label="Plan Price"
-            type="number"
-            required
-            variant="outlined"
-            :rules="rules.planPrice"
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12" sm="2" class="d-flex align-center justify-center">
-          <v-icon
-            class="cursor-pointer"
-            size="large"
-            color="red"
-            icon="mdi-delete"
-            @click="deletePlanRow(index)"
-          ></v-icon>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <div class="d-flex justify-end">
-            <v-btn
-              @click="addNewPlanRow"
-              size="small"
-              color="indigo"
-              icon="mdi-plus"
-              elevation="10"
-            ></v-btn>
-          </div>
-        </v-col>
-      </v-row>
       <v-row>
         <v-btn color="secondary" class="ml-3" type="submit"> Submit </v-btn>
       </v-row>
@@ -222,7 +134,6 @@ const config = useRuntimeConfig();
 const appBaseURL = config.public.appBaseUrl;
 
 const route = useRoute();
-//const emit = defineEmits(["formSubmitted", "clearServerError"]);
 const props = defineProps({
   isEditMode: {
     type: Boolean,
@@ -234,16 +145,7 @@ let showSnackbar = ref(false);
 let snackbarText = ref("");
 let serverErrors = ref({});
 
-const {
-  platforms,
-  categories,
-  tags,
-  licenceTypes,
-  getPlatforms,
-  getLicenceTypes,
-  getRelatedCategories,
-  getListOfTags,
-} = useDataFetch();
+const { tags, getRelatedCategories, getListOfTags } = useDataFetch();
 
 let formData = reactive({
   name: "",
@@ -253,13 +155,12 @@ let formData = reactive({
   platform_id: "",
   category_id: "",
   tags: [],
-  website_link: "",
-  license_type_id: "",
+  tool_link: "",
+  planType: "",
   mainImage: null,
-  otherImages: [],
+  price: "",
+  is_verified: false,
   existingMainImage: null,
-  existingOtherImages: [],
-  plans: [{ name: "", price: "" }],
 });
 
 let rules = reactive({
@@ -275,7 +176,7 @@ let rules = reactive({
   platform: [(v) => !!v || "Platform is required"],
   category: [(v) => !!v || "Category is required"],
   website: [(v) => !!v || "Website is required"],
-  licenceType: [(v) => !!v || "Licence Type is required"],
+  //licenceType: [(v) => !!v || "Licence Type is required"],
   mainImage: [
     (v) => !!v || "File input is required",
     (v) => {
@@ -287,11 +188,11 @@ let rules = reactive({
       return isFileTypeValid || "Only jpeg or png files are allowed";
     },
   ],
-  planName: [(v) => !!v || "Plan Name is required"],
-  planPrice: [
+  //planName: [(v) => !!v || "Plan Name is required"],
+  /* planPrice: [
     (v) => !!v || "Plan Price is required",
     (v) => (v && v > 0) || "Plan Price must be greater than 0",
-  ],
+  ], */
 });
 
 function resetServerError(fieldName) {}
@@ -310,11 +211,6 @@ const showSnackbarMessage = (message) => {
 };
 
 const postData = async () => {
-  // Filter plans
-  const filteredPlans = formData.plans.filter(
-    (plan) => plan.name && plan.price
-  );
-
   // Initialize form
   const form = new FormData();
 
@@ -329,15 +225,6 @@ const postData = async () => {
     formData.mainImage[0] instanceof File
   ) {
     form.append("mainImage", formData.mainImage[0]);
-    //console.log(formData.mainImage[0]);
-  }
-
-  if (formData.otherImages && formData.otherImages.length > 0) {
-    formData.otherImages.forEach((file, index) => {
-      if (file instanceof File) {
-        form.append(`otherImages[]`, file);
-      }
-    });
   }
 
   const originalMainImageId = formData.existingMainImage
@@ -367,9 +254,9 @@ const postData = async () => {
 
   form.append("existingTags", JSON.stringify(existingTagIds));
   form.append("newTags", JSON.stringify(newTags));
-  form.append("price_plans", JSON.stringify(filteredPlans));
+  //form.append("price_plans", JSON.stringify(filteredPlans));
   form.append("originalMainImage", originalMainImageId);
-  form.append("originalOtherImages", JSON.stringify(originalOtherImagesIds));
+  //form.append("originalOtherImages", JSON.stringify(originalOtherImagesIds));
 
   try {
     // Make API request
@@ -379,6 +266,7 @@ const postData = async () => {
       showSnackbarMessage(
         props.isEditMode ? "Updated Successfully." : "Created Successfully."
       );
+      navigateTo("/admin/apps");
     }
   } catch (e) {
     console.log(e);
@@ -395,7 +283,9 @@ const appForm = ref(null);
 async function onSubmit() {
   const { valid } = await appForm.value.validate();
   if (valid) {
-    postData();
+    if (confirm("Are you sure ?")) {
+      postData();
+    }
   }
 }
 
@@ -410,35 +300,9 @@ const handleConfirm = async (e) => {
   deleteImage(currentImageId.value);
 };
 
-const deleteImage = async (imageId) => {
-  const url = `/api/public/image/${imageId}`;
-
-  try {
-    const res = await $axios.delete(url);
-    if (res.status === 200) {
-      // Remove the image from the formData.existingOtherImages array
-      formData.existingOtherImages = formData.existingOtherImages.filter(
-        (image) => image.id !== imageId
-      );
-
-      showSnackbarMessage("Image Deleted Successfully");
-    }
-  } catch (error) {
-    console.error(error);
-    if (error && error.response.status === 400) {
-      // console.log(error.response.data.message);
-      showSnackbarMessage(error.response.data.message);
-      return;
-    }
-    if (error) {
-      showSnackbarMessage("There was some error. Please try again later");
-    }
-  }
-};
-
 const getSingleAppDetails = async () => {
-  const appId = route.params.id;
-  const res = await $axios.get(`/api/apps/${appId}`);
+  const toolId = route.params.id;
+  const res = await $axios.get(`/api/tool/${toolId}`);
 
   if (res.data.tags.length > 0) {
     formData.tags = res.data.tags.map((tag) => ({
@@ -446,18 +310,16 @@ const getSingleAppDetails = async () => {
       name: tag.name,
     }));
   }
+
   formData.name = res.data.name;
   formData.slug = res.data.slug;
   formData.short_description = res.data.short_description;
-  formData.description = res.data.description;
-  formData.platform_id = res.data.platform_id;
-  formData.category_id = res.data.category_id;
-  formData.website_link = res.data.website_link;
-  formData.license_type_id = res.data.license_type.id;
-  formData.plans = res.data.price_plans;
-  // store existing images separately
-  formData.existingMainImage = res.data.main_image;
-  formData.existingOtherImages = res.data.images;
+  formData.description = res.data.long_description;
+  formData.tool_link = res.data.tool_link;
+  formData.price = res.data.price;
+  formData.planType = res.data.pricing_plans;
+  formData.is_verified = Boolean(res.data.is_verified);
+  formData.existingMainImage = res.data.image_path;
 };
 
 /* this variable is for to prevent running getRelatedCategories function twice */
@@ -467,14 +329,12 @@ watchEffect(async () => {
     await getRelatedCategories(formData.platform_id);
     isFirstLoad.value = false;
   }
-  if (props.isEditMode && !formData.platform_id) {
+  if (props.isEditMode) {
     getSingleAppDetails();
   }
 });
 
 async function fetchData() {
-  await getPlatforms();
-  await getLicenceTypes();
   await getListOfTags();
 }
 fetchData();

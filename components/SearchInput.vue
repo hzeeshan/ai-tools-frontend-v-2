@@ -36,7 +36,7 @@ const triggerSearch = async () => {
   }
 };
 
-const placeholders = ["Search", "ChatGPT", "Midjourney"];
+const placeholders = ["Search", "ChatGPT", "Tome"];
 const currentPlaceholder = ref(placeholders[0]);
 let index = 0;
 const isFocused = ref(false);

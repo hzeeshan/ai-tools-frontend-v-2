@@ -21,7 +21,6 @@
                   variant="outlined"
                   v-model="form.review"
                   :rules="[rules.required]"
-                  :error-messages="serverErrors.review"
                 ></v-textarea>
               </v-col>
             </v-row>
@@ -36,9 +35,9 @@
       </v-container>
     </v-card>
 
-    <!-- <section>
+    <section>
       <Snackbar v-model="snackbar" :text="snackbarText" />
-    </section> -->
+    </section>
 
     <section class="bg-gray px-3">
       <v-container> </v-container>
@@ -47,17 +46,12 @@
 </template>
 
 <script setup>
-/* const props = defineProps({
-  appId: {
-    type: Number,
-    required: true,
-  },
-}); */
+const { $userStore } = useNuxtApp();
+const { $axios } = useNuxtApp();
+const props = defineProps(["appId"]);
 const form = reactive({
   rating: null,
   review: "",
-  name: "",
-  email: "",
 });
 
 const rules = {
@@ -81,7 +75,10 @@ const snackbarText = ref("");
 
 async function submitForm() {
   const { valid } = await formRef.value.validate();
-
+  if (!$userStore.isLoggedIn) {
+    showSnackbar("Please log in to submit your review.");
+    return;
+  }
   if (valid) {
     postData();
   }
@@ -89,47 +86,37 @@ async function submitForm() {
 
 async function postData() {
   const formData = {
-    appId: props.appId,
+    toolId: props.appId,
     rating: form.rating,
     review: form.review,
-    name: form.name,
-    email: form.email,
+    userId: $userStore.id,
   };
 
-  const { data, error } = await useFetch(`${baseUrl}/rating/store`, {
-    method: "post",
-    body: formData,
-  });
+  const response = await $axios.post("/api/public/rating/store", formData);
 
-  if (data.value.success) {
-    showForm.value = false;
+  if (response.data.success === true) {
     showSnackbar("Thank you. Your review was submitted successfully.");
-    //getAppRating(); /* fetch latest reviews */
-  }
-
-  if (error.value && error.value.data.errors) {
-    serverErrors.value = error.value.data.errors;
+    //resetState();
+  } else {
+    showSnackbar("Something went wrong. Please try again later.");
   }
 }
-function submitAnotherReview() {
-  showForm.value = true;
-}
-/* async function getAppRating() {
-  const id = props.appId;
-  const { data } = await useFetch(`${baseUrl}/app/rating/${id}`);
-
-  appRating.value = data.value;
-} */
 
 const showSnackbar = async (message) => {
   snackbarText.value = message;
   snackbar.value = true;
-  //await nextTick();
-  //snackbar.value = true;
+};
+
+const resetState = () => {
+  form.rating = null;
+  form.review = "";
+
+  formRef.value.resetValidation();
 };
 
 onMounted(() => {
   //getAppRating();
+  //console.log(props.appId);
 });
 </script>
 
