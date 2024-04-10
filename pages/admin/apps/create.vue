@@ -6,7 +6,7 @@
     <v-container>
       <v-card>
         <v-card-title>
-          <span class="text-h5">Insert new App</span>
+          <span class="text-h5">Create new Tool</span>
         </v-card-title>
         <v-card-text>
           <v-container>

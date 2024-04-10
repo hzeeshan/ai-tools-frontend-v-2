@@ -33,7 +33,12 @@
         >
 
         <v-btn flat to="/blog" nuxt v-if="mobile"> Blog </v-btn>
-        <v-btn flat to="/admin/dashboard" nuxt v-if="$userStore.isLoggedIn">
+        <v-btn
+          flat
+          to="/admin/dashboard"
+          nuxt
+          v-if="$userStore.isLoggedIn && $userStore.hasRole('admin')"
+        >
           Admin
         </v-btn>
         <v-btn flat class="switch-theme-btn-padding">
