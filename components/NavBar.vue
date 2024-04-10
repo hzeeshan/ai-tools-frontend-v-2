@@ -58,7 +58,7 @@
     <v-navigation-drawer app temporary v-model="drawer" v-if="mobile">
       <v-list density="compact" nav>
         <v-list-item
-          v-for="item in navItems"
+          v-for="item in dynamicNavItems"
           :key="item.title"
           @click="navigateTo(item.path)"
           class="d-flex align-sm-center"
@@ -85,18 +85,54 @@ const theme = useTheme();
 
 let drawer = ref(false);
 
-const navItems = [
-  { title: "Home", icon: "mdi-home", path: "/" },
-  {
-    title: "Tags",
-    icon: "mdi-format-list-bulleted",
-    path: "/tags",
-  },
-  /* { title: "Platforms", icon: "mdi-desktop-classic", path: "/platforms" }, */
-  { title: "Contact Us", icon: "mdi-contacts", path: "/contact" },
-  { title: "Login", icon: "mdi-login", path: "/auth/login" },
-  { title: "Blog", icon: "mdi-atom", path: "/blog" },
-];
+const dynamicNavItems = computed(() => {
+  let items = [
+    { title: "Home", icon: "mdi-home", path: "/" },
+    { title: "Tags", icon: "mdi-tag", path: "/tags" },
+    { title: "Contact Us", icon: "mdi-contacts", path: "/contact" },
+  ];
+
+  if ($userStore.isLoggedIn) {
+    items.push({
+      title: "Logout",
+      icon: "mdi-logout",
+      path: "",
+      action: "logout",
+    });
+
+    if ($userStore.hasRole("admin")) {
+      items.push({
+        title: "Admin",
+        icon: "mdi-account-cog",
+        path: "/admin/dashboard",
+      });
+    }
+  } else {
+    items.push({ title: "Login", icon: "mdi-login", path: "/auth/login" });
+    items.push({
+      title: "Register",
+      icon: "mdi-account-plus-outline",
+      path: "/auth/register",
+    });
+  }
+
+  return items;
+});
+
+const navigateTo = (path) => {
+  const router = useRouter();
+
+  if (
+    path === "" &&
+    dynamicNavItems.value.find((item) => item.action === "logout")
+  ) {
+    // Perform logout action
+    $userStore.logout();
+  } else {
+    // Navigate to the given path
+    router.push(path);
+  }
+};
 
 const toggleTheme = () => {
   theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";

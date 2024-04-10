@@ -74,7 +74,7 @@ async function filterAppsByTag(tagIds, page = 1) {
   isLoading.value = true;
   try {
     const response = await $axios.get(
-      `${baseUrl}/tools/by-tags?tagIds=${tagIds.join(",")}&page=${page}`
+      `/api/tools/by-tags?tagIds=${tagIds.join(",")}&page=${page}`
     );
 
     tools.value = response.data.data;

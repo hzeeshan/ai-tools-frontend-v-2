@@ -3,18 +3,18 @@
     <HomeBanner @search="handleSearch" />
     <br />
     <section>
-      <v-container>
-        <v-row class="mx-auto">
-          <v-col cols="2" class="align-self-center">
+      <v-container fluid class="px-0">
+        <v-row class="mx-auto" no-gutters>
+          <v-col cols="12" sm="2" md="2" class="align-self-center pb-3">
             <Filter
               @filter="handleFilterResults"
               @clearFilters="getInitialData"
             />
           </v-col>
-          <v-col cols="8" class="align-self-center">
+          <v-col cols="12" sm="8" md="8" class="align-self-center py-3">
             <TagsSlides />
           </v-col>
-          <v-col cols="2" class="align-self-center">
+          <v-col cols="12" sm="2" md="2" class="align-self-center">
             <SortBy @sortBy="handleSortByResults" />
           </v-col>
         </v-row>

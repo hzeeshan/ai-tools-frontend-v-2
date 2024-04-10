@@ -12,7 +12,7 @@
           <span class="clear-filter-button" @click="clearFilter"> Clear </span>
         </div>
       </div>
-      <v-btn v-else @click="openFilterDialog" variant="outlined">
+      <v-btn block v-else @click="openFilterDialog" variant="outlined">
         Filters
         <v-icon>mdi-filter-outline</v-icon>
       </v-btn>

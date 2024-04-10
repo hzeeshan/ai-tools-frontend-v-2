@@ -83,6 +83,16 @@
           size="64"
         ></v-progress-circular>
       </v-overlay>
+
+      <ConfirmDialog
+        v-model="showConfirmDialog"
+        @confirm="handleConfirm"
+        title="Confirm"
+        message="Are you sure you want to delete this Image?"
+        yes="Yes"
+        no="No"
+        :options="{}"
+      />
     </section>
   </v-main>
 </template>
@@ -98,6 +108,7 @@ let formData = reactive({
   message: ref(""),
 });
 
+const showConfirmDialog = ref(false);
 let showSnackbar = ref(false);
 let snackbarText = ref("");
 let overlay = ref(false);
@@ -123,25 +134,30 @@ const formRef = ref(null);
 const submit = async () => {
   const { valid } = await formRef.value.validate();
   if (valid) {
-    try {
-      overlay.value = true;
-      const res = await $axios.post("/api/public/contact-form", {
-        data: formData,
-      });
-      console.log(res);
-      if (res.data.success === true) {
-        showSnackbarMessage("Sent successfully ");
-        formReset();
-      }
-      overlay.value = false;
-    } catch (e) {
-      console.log(e);
-      showSnackbarMessage("There was some error. Please try again later");
+    showConfirmDialog.value = true;
+  }
+};
+
+const handleConfirm = async () => {
+  try {
+    overlay.value = true;
+    const res = await $axios.post("/api/public/contact-form", {
+      data: formData,
+    });
+    if (res.data.success === true) {
+      showSnackbarMessage(
+        "Message sent successfully, we will get back to you shortly"
+      );
     }
+    formReset();
+    overlay.value = false;
+  } catch (e) {
+    console.log(e);
+    showSnackbarMessage("There was some error. Please try again later");
   }
 };
 
 const formReset = () => {
-  //formRef.value.reset();
+  formRef.value.reset();
 };
 </script>
