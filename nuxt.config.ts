@@ -4,7 +4,12 @@ export default defineNuxtConfig({
   build: {
     transpile: ["vuetify"],
   },
-  modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt", "@nuxt/image"],
+  modules: [
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+    "@nuxt/image",
+    "nuxt-gtag",
+  ],
   extends: ["nuxt-seo-kit"],
   ssr: true,
 
@@ -19,5 +24,9 @@ export default defineNuxtConfig({
         "Explore the vast universe of AI applications and tools. Discover innovative solutions for web, mobile, and extensions across multiple domains.",
       language: "en",
     },
+  },
+
+  gtag: {
+    id: "G-90ZDW353HX",
   },
 });
